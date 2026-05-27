@@ -66,8 +66,8 @@ echo  [OK] Base de dados configurada.
 
 :: ---- Utilizadores padrao ----
 echo.
-echo  [4/5] A criar utilizadores padrao...
-python manage.py criar_utilizadores_padrao
+echo  [4/5] A criar/redefinir utilizadores padrao...
+python manage.py redefinir_senhas
 echo.
 
 :: ---- Ficheiros estaticos ----
