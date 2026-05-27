@@ -1,0 +1,72 @@
+================================================================
+  SISTEMA DE GESTAO DE ENERGIA
+  Versao 1.0  |  Desenvolvido em Django + SQLite
+================================================================
+
+REQUISITO UNICO: Python 3.8 ou superior
+  Download: https://www.python.org/downloads/
+  IMPORTANTE: Marque "Add Python to PATH" durante a instalacao!
+
+================================================================
+  INSTALACAO (primeira vez)
+================================================================
+
+  WINDOWS:
+    Faca duplo clique em:  INSTALAR.bat
+    Aguarde alguns minutos. O navegador abre automaticamente.
+
+  LINUX / MAC:
+    Abra o terminal na pasta do projecto e execute:
+      chmod +x instalar.sh
+      bash instalar.sh
+    O navegador abre automaticamente.
+
+================================================================
+  INICIAR O SISTEMA (apos instalacao)
+================================================================
+
+  WINDOWS:  Faca duplo clique em  INICIAR.bat
+  LINUX/MAC: Execute  bash iniciar.sh
+
+  Endereco manual: http://localhost:8000
+
+================================================================
+  CREDENCIAIS DE ACESSO
+================================================================
+
+  FUNCAO          UTILIZADOR    SENHA
+  --------------  ------------  ----------
+  Administrador   admin         admin@2025
+  Financeiro      financeiro    fin@2025
+  Operador        operador      oper@2025
+
+  Nota: O Financeiro e o Operador NAO tem acesso ao painel
+        de administracao Django (/admin/), apenas ao sistema.
+
+================================================================
+  INFORMACAO TECNICA
+================================================================
+
+  - Base de dados: SQLite (ficheiro db.sqlite3 na pasta)
+    Nao requer instalacao de servidor de base de dados.
+
+  - Para fazer backup dos dados, basta copiar o ficheiro:
+    db.sqlite3
+
+  - Para repor o sistema do zero (apagar todos os dados):
+    Apague o ficheiro db.sqlite3 e execute INSTALAR.bat novamente.
+
+================================================================
+  PASTA DO PROJECTO
+================================================================
+
+  INSTALAR.bat          -> Instalador (Windows)
+  INICIAR.bat           -> Iniciar sistema (Windows)
+  instalar.sh           -> Instalador (Linux/Mac)
+  iniciar.sh            -> Iniciar sistema (Linux/Mac)
+  manage.py             -> Script principal Django
+  requirements_local.txt-> Lista de dependencias
+  db.sqlite3            -> Base de dados (criada apos instalacao)
+  venv/                 -> Ambiente virtual Python (criado pelo instalador)
+
+================================================================

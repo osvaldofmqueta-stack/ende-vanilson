@@ -24,3 +24,9 @@ id = "Ibcj1E1O5X6BYzmTQliAQ"
 uri = "file://static/diagrams/4_diagrama_caso_uso.png"
 type = "image"
 title = "Diagrama de Casos de Uso"
+
+[[outputs]]
+id = "SM0bbtvu0u8nhFl0ETzZS"
+uri = "file://sistema_gestao_energia.zip"
+type = "unspecified"
+title = "Sistema de Gestão de Energia - Instalador Completo"
