@@ -3,27 +3,127 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h3>Registrar Leitura: {{ contador.numero_serie }}</h3>
-            </div>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <a href="{% url 'contador_list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+            <h3 class="mb-0 fw-bold">Registar Leitura</h3>
+        </div>
+
+        <!-- Info do Contador -->
+        <div class="card border-0 shadow-sm mb-3">
             <div class="card-body">
-                <p><strong>Cliente:</strong> {{ contador.cliente.nome|default:"Sem Cliente" }}</p>
-                <p><strong>Leitura Anterior:</strong> {{ contador.leitura_atual }} kWh</p>
-                
+                <div class="row g-3">
+                    <div class="col-6">
+                        <small class="text-muted d-block">Contador</small>
+                        <span class="fw-bold">{{ contador.numero_serie }}</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Tipo</small>
+                        <span class="badge bg-primary">Pré-pago</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Cliente</small>
+                        <span class="fw-semibold">{{ contador.cliente.nome|default:"Sem Cliente" }}</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Saldo Actual</small>
+                        {% if contador.cliente %}
+                            <span class="fw-bold {% if contador.cliente.saldo_atual > 0 %}text-success{% else %}text-danger{% endif %}">
+                                {{ contador.cliente.saldo_atual }} Kz
+                            </span>
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Leitura Anterior</small>
+                        <span class="fw-semibold">{{ contador.leitura_atual }} kWh</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block">Tarifa</small>
+                        <span class="fw-semibold">
+                            {% if contador.cliente.tarifa %}{{ contador.cliente.tarifa.preco_kwh }} Kz/kWh{% else %}50.00 Kz/kWh (padrão){% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if contador.cliente and contador.cliente.saldo_atual <= 0 %}
+        <div class="alert alert-danger d-flex gap-2 align-items-start mb-3">
+            <span style="font-size:1.1rem;">⚠️</span>
+            <span>Este cliente não tem saldo disponível. A leitura será registada mas o custo do consumo não poderá ser debitado.</span>
+        </div>
+        {% endif %}
+
+        <!-- Formulário de Leitura -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        <label for="leitura_atual" class="form-control-label">Nova Leitura (kWh):</label>
-                        <input type="number" step="0.01" name="leitura_atual" class="form-control" required min="{{ contador.leitura_atual }}">
+                    <div class="mb-4">
+                        <label for="leitura_atual" class="form-label fw-semibold">Nova Leitura (kWh) <span class="text-danger">*</span></label>
+                        <input type="number" step="0.01" name="leitura_atual" id="leitura_atual"
+                            class="form-control form-control-lg" required
+                            min="{{ contador.leitura_atual }}"
+                            placeholder="Ex: {{ contador.leitura_atual|floatformat:2 }}">
+                        <div class="form-text">Deve ser igual ou superior à leitura anterior ({{ contador.leitura_atual }} kWh).</div>
                     </div>
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Registrar e Gerar Fatura</button>
-                        <a href="{% url 'contador_list' %}" class="btn btn-secondary">Cancelar</a>
+
+                    <!-- Preview do custo (calculado via JS) -->
+                    <div class="alert alert-light border mb-4" id="previewCusto" style="display:none;">
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <small class="text-muted d-block">Consumo</small>
+                                <strong id="previewConsumo">—</strong> kWh
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Custo</small>
+                                <strong id="previewValor">—</strong> Kz
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Saldo Pós-débito</small>
+                                <strong id="previewSaldo">—</strong> Kz
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">Registar Leitura e Debitar Saldo</button>
+                        <a href="{% url 'contador_list' %}" class="btn btn-secondary px-4">Cancelar</a>
                     </div>
                 </form>
             </div>
         </div>
+
     </div>
 </div>
+
+<script>
+    const leituraAnterior = parseFloat("{{ contador.leitura_atual }}") || 0;
+    const saldoAtual = parseFloat("{{ contador.cliente.saldo_atual|default:'0' }}") || 0;
+    const precoKwh = parseFloat("{% if contador.cliente.tarifa %}{{ contador.cliente.tarifa.preco_kwh }}{% else %}50{% endif %}") || 50;
+
+    const inputLeitura = document.getElementById('leitura_atual');
+    const preview = document.getElementById('previewCusto');
+
+    inputLeitura.addEventListener('input', function() {
+        const novaLeitura = parseFloat(this.value) || 0;
+        const consumo = novaLeitura - leituraAnterior;
+
+        if (consumo > 0) {
+            const custo = consumo * precoKwh;
+            const saldoPos = saldoAtual - custo;
+
+            document.getElementById('previewConsumo').textContent = consumo.toFixed(2);
+            document.getElementById('previewValor').textContent = custo.toFixed(2);
+            const saldoEl = document.getElementById('previewSaldo');
+            saldoEl.textContent = saldoPos.toFixed(2);
+            saldoEl.className = saldoPos >= 0 ? 'text-success' : 'text-danger';
+            preview.style.display = 'block';
+        } else {
+            preview.style.display = 'none';
+        }
+    });
+</script>
 {% endblock %}

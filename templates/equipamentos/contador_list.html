@@ -3,10 +3,11 @@
 {% block content %}
 <div class="row mb-4">
     <div class="col-md-8">
-        <h2>Gestão de Contadores</h2>
+        <h2 class="fw-bold mb-1">Gestão de Contadores</h2>
+        <small class="text-muted">Contadores pré-pagos — associados a clientes pré-pagos</small>
     </div>
     <div class="col-md-4 text-end">
-        <a href="{% url 'contador_create' %}" class="btn btn-primary">Registrar Novo Contador</a>
+        <a href="{% url 'contador_create' %}" class="btn btn-primary">+ Registar Novo Contador</a>
     </div>
 </div>
 
@@ -26,12 +27,13 @@
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-hover">
+            <table class="table table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Nº Série</th>
-                        <th>Tipo/Fase</th>
+                        <th>Fase</th>
                         <th>Cliente</th>
+                        <th>Saldo (Kz)</th>
                         <th>Cartão</th>
                         <th>Status</th>
                         <th>Ações</th>
@@ -40,37 +42,58 @@
                 <tbody>
                     {% for contador in contadores %}
                     <tr>
-                        <td>{{ contador.numero_serie }}</td>
-                        <td>{{ contador.get_tipo_contador_display }} / {{ contador.get_tipo_conexao_display }}</td>
-                        <td>{{ contador.cliente.nome|default:"Sem Cliente" }}</td>
-                        <td>{{ contador.numero_cartao|default:"-" }}</td>
+                        <td class="fw-semibold">{{ contador.numero_serie }}</td>
+                        <td>{{ contador.get_tipo_conexao_display }}</td>
                         <td>
-                            <span class="badge {% if contador.status == 'ATIVO' %}bg-success{% elif contador.status == 'AVARIADO' %}bg-danger{% else %}bg-secondary{% endif %}">
-                                {{ contador.status }}
+                            {{ contador.cliente.nome|default:"Sem Cliente" }}
+                            {% if contador.cliente %}
+                                <br><small class="text-muted">{{ contador.cliente.numero_cliente }}</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if contador.cliente %}
+                                <span class="fw-bold {% if contador.cliente.saldo_atual > 0 %}text-success{% else %}text-danger{% endif %}">
+                                    {{ contador.cliente.saldo_atual }} Kz
+                                </span>
+                            {% else %}
+                                <span class="text-muted">—</span>
+                            {% endif %}
+                        </td>
+                        <td><code>{{ contador.numero_cartao|default:"-" }}</code></td>
+                        <td>
+                            <span class="badge
+                                {% if contador.status == 'ATIVO' %}bg-success
+                                {% elif contador.status == 'AVARIADO' %}bg-danger
+                                {% elif contador.status == 'SUSPENSO' %}bg-warning text-dark
+                                {% elif contador.status == 'MANUTENCAO' %}bg-info text-dark
+                                {% else %}bg-secondary{% endif %}">
+                                {{ contador.get_status_display }}
                             </span>
                         </td>
                         <td>
-                            <a href="{% url 'contador_registrar_leitura' contador.pk %}" class="btn btn-sm btn-success">Leitura</a>
-                            <a href="{% url 'contador_historico' contador.pk %}" class="btn btn-sm btn-primary">Histórico</a>
-                            <a href="{% url 'contador_update' contador.pk %}" class="btn btn-sm btn-info">Editar</a>
-                            {% if contador.status != 'AVARIADO' %}
-                            <a href="{% url 'contador_marcar_avariado' contador.pk %}" class="btn btn-sm btn-warning">Avariado</a>
-                            {% endif %}
-                            <a href="{% url 'contador_toggle_status' contador.pk %}" class="btn btn-sm {% if contador.status == 'ATIVO' %}btn-secondary{% else %}btn-success{% endif %}">
-                                {% if contador.status == 'ATIVO' %}Desativar{% else %}Ativar{% endif %}
-                            </a>
-                            <button type="button" class="btn btn-sm btn-danger"
-                                data-bs-toggle="modal"
-                                data-bs-target="#deleteModal"
-                                data-url="{% url 'contador_delete' contador.pk %}"
-                                data-nome="{{ contador.numero_serie }}">
-                                Eliminar
-                            </button>
+                            <div class="d-flex flex-wrap gap-1">
+                                <a href="{% url 'contador_registrar_leitura' contador.pk %}" class="btn btn-sm btn-success">Leitura</a>
+                                <a href="{% url 'contador_historico' contador.pk %}" class="btn btn-sm btn-primary">Histórico</a>
+                                <a href="{% url 'contador_update' contador.pk %}" class="btn btn-sm btn-info">Editar</a>
+                                {% if contador.status != 'AVARIADO' %}
+                                <a href="{% url 'contador_marcar_avariado' contador.pk %}" class="btn btn-sm btn-warning">Avariado</a>
+                                {% endif %}
+                                <a href="{% url 'contador_toggle_status' contador.pk %}" class="btn btn-sm {% if contador.status == 'ATIVO' %}btn-secondary{% else %}btn-success{% endif %}">
+                                    {% if contador.status == 'ATIVO' %}Desativar{% else %}Ativar{% endif %}
+                                </a>
+                                <button type="button" class="btn btn-sm btn-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal"
+                                    data-url="{% url 'contador_delete' contador.pk %}"
+                                    data-nome="{{ contador.numero_serie }}">
+                                    Eliminar
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="6" class="text-center">Nenhum contador encontrado.</td>
+                        <td colspan="7" class="text-center py-4 text-muted">Nenhum contador registado.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -80,18 +103,18 @@
 </div>
 
 <!-- Modal de Confirmação de Eliminação -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
             <div class="modal-header border-0 pb-0">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body text-center px-4 pb-2">
                 <div class="mb-3" style="font-size:3rem;">🗑️</div>
                 <h5 class="fw-bold text-danger mb-2">Eliminar Contador</h5>
                 <p class="text-muted mb-0">Tem a certeza que deseja eliminar o contador</p>
                 <p class="fw-semibold mb-0" id="deleteNome"></p>
-                <p class="text-muted mt-2" style="font-size:0.85rem;">Esta ação é <strong>permanente</strong> e não pode ser desfeita.<br>Todo o histórico e leituras associadas serão eliminados.</p>
+                <p class="text-muted mt-2" style="font-size:0.85rem;">Esta ação é <strong>permanente</strong>. Todo o histórico e leituras associadas serão eliminados.</p>
             </div>
             <div class="modal-footer border-0 d-flex justify-content-center gap-2 pb-4">
                 <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancelar</button>

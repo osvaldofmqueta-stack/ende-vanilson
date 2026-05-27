@@ -3,17 +3,87 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h3>{{ title }}</h3>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <a href="{% url 'contador_list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+            <div>
+                <h3 class="mb-0 fw-bold">{{ title }}</h3>
+                <small class="text-muted">Contadores exclusivos para clientes pré-pagos</small>
             </div>
-            <div class="card-body">
+        </div>
+
+        <div class="alert alert-info d-flex gap-2 align-items-start py-2 mb-4">
+            <span style="font-size:1.1rem;">ℹ️</span>
+            <span>Apenas clientes do tipo <strong>Pré-pago</strong> podem ser associados a um contador. O número do cartão é obrigatório.</span>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
-                    {{ form.as_p }}
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <a href="{% url 'contador_list' %}" class="btn btn-secondary">Cancelar</a>
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Número de Série <span class="text-danger">*</span></label>
+                            {{ form.numero_serie }}
+                            {% if form.numero_serie.errors %}<div class="text-danger small mt-1">{{ form.numero_serie.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Número do Cartão <span class="text-danger">*</span></label>
+                            {{ form.numero_cartao }}
+                            {% if form.numero_cartao.errors %}<div class="text-danger small mt-1">{{ form.numero_cartao.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Cliente Pré-pago <span class="text-danger">*</span></label>
+                            {{ form.cliente }}
+                            {% if form.cliente.errors %}<div class="text-danger small mt-1">{{ form.cliente.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Tipo de Ligação <span class="text-danger">*</span></label>
+                            {{ form.tipo_conexao }}
+                            {% if form.tipo_conexao.errors %}<div class="text-danger small mt-1">{{ form.tipo_conexao.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Data de Instalação <span class="text-danger">*</span></label>
+                            {{ form.data_instalacao }}
+                            {% if form.data_instalacao.errors %}<div class="text-danger small mt-1">{{ form.data_instalacao.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Potência Máxima (kW) <span class="text-danger">*</span></label>
+                            {{ form.potencia_maxima }}
+                            {% if form.potencia_maxima.errors %}<div class="text-danger small mt-1">{{ form.potencia_maxima.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Estado</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}<div class="text-danger small mt-1">{{ form.status.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Endereço de Instalação <span class="text-danger">*</span></label>
+                            {{ form.endereco_instalacao }}
+                            {% if form.endereco_instalacao.errors %}<div class="text-danger small mt-1">{{ form.endereco_instalacao.errors }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Observações</label>
+                            {{ form.observacoes }}
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary px-4">Guardar Contador</button>
+                        <a href="{% url 'contador_list' %}" class="btn btn-secondary px-4">Cancelar</a>
                     </div>
                 </form>
             </div>

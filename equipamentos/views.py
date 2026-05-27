@@ -65,13 +65,8 @@ def contador_marcar_avariado(request, pk):
     contador = get_object_or_404(Contador, pk=pk)
     contador.status = 'AVARIADO'
     contador.save()
-    
-    # Se o cliente for pré-pago, passa para pós-pago (sem contador funcional)
-    if contador.cliente and contador.cliente.tipo_cliente == 'PRE_PAGO':
-        cliente = contador.cliente
-        cliente.tipo_cliente = 'POS_PAGO'
-        cliente.save()
-        
+    from django.contrib import messages
+    messages.warning(request, f"Contador {contador.numero_serie} marcado como avariado.")
     return redirect('contador_list')
 
 from django.utils import timezone
@@ -119,34 +114,23 @@ def contador_registrar_leitura(request, pk):
                 operador=request.user
             )
             
-            # Se for POS_PAGO, gera fatura
-            if contador.tipo_contador == 'POS_PAGO':
-                from pagamentos.models import Fatura
-                import datetime
-                
-                consumo = leitura_atual_dec - leitura_anterior
-                if consumo > 0:
-                    tarifa = contador.cliente.tarifa
-                    preco_kwh = tarifa.preco_kwh if tarifa else Decimal('50.00')
-                    taxa_fixa = tarifa.taxa_fixa if tarifa else Decimal('0.00')
-                    
-                    valor_consumo = consumo * preco_kwh
-                    valor_total = valor_consumo + taxa_fixa
-                    
-                    Fatura.objects.create(
-                        cliente=contador.cliente,
-                        contador=contador,
-                        periodo_referencia=timezone.now().strftime('%B/%Y'),
-                        leitura_anterior=leitura_anterior,
-                        leitura_atual=leitura_atual_dec,
-                        consumo_kwh=consumo,
-                        valor_consumo=valor_consumo,
-                        outras_taxas=taxa_fixa,
-                        valor_total=valor_total,
-                        data_emissao=datetime.date.today(),
-                        data_vencimento=datetime.date.today() + datetime.timedelta(days=15)
-                    )
-            
+            # Contadores são pré-pagos: deduz consumo do saldo do cliente
+            consumo = leitura_atual_dec - leitura_anterior
+            if consumo > 0 and contador.cliente:
+                cliente = contador.cliente
+                tarifa = cliente.tarifa
+                preco_kwh = tarifa.preco_kwh if tarifa else Decimal('50.00')
+                custo_consumo = consumo * preco_kwh
+
+                if cliente.saldo_atual >= custo_consumo:
+                    cliente.saldo_atual -= custo_consumo
+                    cliente.save()
+                    from django.contrib import messages
+                    messages.success(request, f"Leitura registada. Consumo: {consumo} kWh ({custo_consumo:.2f} Kz debitados). Saldo restante: {cliente.saldo_atual:.2f} Kz.")
+                else:
+                    from django.contrib import messages
+                    messages.warning(request, f"Leitura registada mas saldo insuficiente. Consumo: {consumo} kWh ({custo_consumo:.2f} Kz). Saldo actual: {cliente.saldo_atual:.2f} Kz.")
+
             return redirect('contador_historico', pk=pk)
             
     return render(request, 'equipamentos/contador_leitura.html', {'contador': contador})

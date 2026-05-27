@@ -45,8 +45,7 @@ class Contador(models.Model):
         return f"{self.numero_serie} - {self.cliente.nome if self.cliente else 'Sem Cliente'}"
     
     def save(self, *args, **kwargs):
-        if self.cliente:
-            self.tipo_contador = self.cliente.tipo_cliente
+        self.tipo_contador = 'PRE_PAGO'
         super().save(*args, **kwargs)
 
 
