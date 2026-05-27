@@ -1,100 +1,504 @@
-{% extends 'base.html' %}
-{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — Sistema de Gestão de Energia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-{% block content %}
-<div class="d-flex align-items-center justify-content-center" style="min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div class="col-md-5 col-lg-4 px-3">
-        <div class="card border-0 shadow-lg animate__animated animate__fadeIn">
-            <div class="card-body p-5">
-                <div class="text-center mb-4">
-                    <div class="display-1 text-primary mb-2">⚡</div>
-                    <h2 class="fw-bold">Bem-vindo</h2>
-                    <p class="text-muted">Acesse o Sistema de Gestão de Energia</p>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            background: #0f172a;
+        }
+
+        /* ── LEFT PANEL ───────────────────────────────── */
+        .brand-panel {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            overflow: hidden;
+            background: linear-gradient(145deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+        }
+
+        /* Animated energy grid background */
+        .brand-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(56,189,248,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56,189,248,0.06) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0%   { background-position: 0 0; }
+            100% { background-position: 48px 48px; }
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.35;
+            animation: pulse 6s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, #0ea5e9, transparent 70%);
+            top: -100px; left: -100px;
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, #7c3aed, transparent 70%);
+            bottom: -80px; right: -80px;
+            animation-delay: 3s;
+        }
+        .orb-3 {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, #06b6d4, transparent 70%);
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: 1.5s;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50%       { opacity: 0.5; transform: scale(1.08); }
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .logo-ring {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0ea5e9, #7c3aed);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 0 16px rgba(14,165,233,0.1), 0 0 40px rgba(14,165,233,0.4);
+            animation: ringPulse 3s ease-in-out infinite;
+        }
+        @keyframes ringPulse {
+            0%, 100% { box-shadow: 0 0 0 16px rgba(14,165,233,0.1), 0 0 40px rgba(14,165,233,0.3); }
+            50%       { box-shadow: 0 0 0 24px rgba(14,165,233,0.05), 0 0 60px rgba(14,165,233,0.5); }
+        }
+        .logo-ring svg { width: 42px; height: 42px; color: white; }
+
+        .brand-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .brand-title span {
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .brand-sub {
+            color: rgba(148,163,184,0.9);
+            font-size: 0.95rem;
+            margin-top: 0.75rem;
+            font-weight: 400;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-chip {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            min-width: 110px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .stat-chip .value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #38bdf8;
+        }
+        .stat-chip .label {
+            font-size: 0.72rem;
+            color: rgba(148,163,184,0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        .brand-footer {
+            position: absolute;
+            bottom: 1.5rem;
+            font-size: 0.78rem;
+            color: rgba(148,163,184,0.5);
+        }
+
+        /* ── RIGHT PANEL ──────────────────────────────── */
+        .login-panel {
+            width: 480px;
+            min-width: 480px;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 3.5rem;
+            position: relative;
+        }
+
+        .login-panel .back-logo {
+            display: none;
+        }
+
+        .login-heading {
+            margin-bottom: 2.5rem;
+        }
+        .login-heading h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #0f172a;
+            letter-spacing: -0.5px;
+        }
+        .login-heading p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.4rem;
+        }
+
+        /* Form */
+        .field-group {
+            margin-bottom: 1.25rem;
+        }
+        .field-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.2px;
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            display: flex;
+        }
+        .input-wrap .icon svg { width: 18px; height: 18px; }
+
+        .input-wrap input {
+            width: 100%;
+            height: 48px;
+            padding: 0 44px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            outline: none;
+        }
+        .input-wrap input:focus {
+            border-color: #0ea5e9;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
+        }
+        .input-wrap input.is-invalid {
+            border-color: #ef4444;
+            background: #fff5f5;
+        }
+        .input-wrap input.is-invalid:focus {
+            box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
+        }
+
+        /* Toggle password */
+        .toggle-pw {
+            position: absolute;
+            right: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            transition: color 0.2s;
+        }
+        .toggle-pw:hover { color: #475569; }
+        .toggle-pw svg { width: 18px; height: 18px; }
+
+        /* Error alert */
+        .alert-error {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: #b91c1c;
+            animation: shake 0.4s ease;
+        }
+        .alert-error svg { width: 18px; height: 18px; flex-shrink: 0; color: #ef4444; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%       { transform: translateX(-6px); }
+            40%       { transform: translateX(6px); }
+            60%       { transform: translateX(-4px); }
+            80%       { transform: translateX(4px); }
+        }
+
+        /* Submit button */
+        .btn-login {
+            width: 100%;
+            height: 50px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 14px rgba(14,165,233,0.35);
+        }
+        .btn-login:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(14,165,233,0.45);
+            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+        }
+        .btn-login:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(14,165,233,0.3);
+        }
+        .btn-login:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+        .btn-login svg { width: 18px; height: 18px; }
+
+        /* Spinner */
+        .spin {
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.35);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: none;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .login-footer {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #f1f5f9;
+            text-align: center;
+            font-size: 0.78rem;
+            color: #94a3b8;
+        }
+
+        /* Responsive: stack on small screens */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .brand-panel { 
+                min-height: 220px; 
+                padding: 2rem 1.5rem; 
+                flex: none;
+            }
+            .stats-row { display: none; }
+            .login-panel {
+                width: 100%;
+                min-width: unset;
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LEFT — Brand Panel -->
+    <div class="brand-panel">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+
+        <div class="brand-content">
+            <div class="logo-ring">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+            </div>
+
+            <div class="brand-title">
+                Sistema de Gestão<br>de <span>Energia</span>
+            </div>
+            <p class="brand-sub">Plataforma integrada para gestão de clientes,<br>contadores e faturação energética</p>
+
+            <div class="stats-row">
+                <div class="stat-chip">
+                    <div class="value">Pré</div>
+                    <div class="label">Pré-pago</div>
                 </div>
-
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
-                    
-                    {% if form.errors or form.non_field_errors %}
-                        <div class="alert alert-danger py-2 mb-4 animate__animated animate__shakeX">
-                            <i class="bi bi-exclamation-triangle-fill"></i> Usuário ou senha incorretos.
-                        </div>
-                    {% endif %}
-
-                    <div class="mb-3">
-                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">Usuário</label>
-                        <div class="input-group has-validation">
-                            <span class="input-group-text bg-light border-end-0">👤</span>
-                            <input type="text" name="username" class="form-control bg-light border-start-0 {% if form.username.errors %}is-invalid{% endif %}" id="{{ form.username.id_for_label }}" placeholder="Seu usuário" required>
-                            <div class="invalid-feedback">O nome de usuário é obrigatório.</div>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">Senha</label>
-                        <div class="input-group has-validation">
-                            <span class="input-group-text bg-light border-end-0">🔒</span>
-                            <input type="password" name="password" class="form-control bg-light border-start-0 {% if form.password.errors %}is-invalid{% endif %}" id="{{ form.password.id_for_label }}" placeholder="Sua senha" required>
-                            <div class="invalid-feedback">A senha é obrigatória.</div>
-                        </div>
-                    </div>
-
-                    <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" id="loginBtn">
-                            <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
-                            <span id="loginText">Entrar no Sistema</span>
-                        </button>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <small class="text-muted">© 2025 Gestão de Energia - Angola</small>
-                    </div>
-                </form>
+                <div class="stat-chip">
+                    <div class="value">Pós</div>
+                    <div class="label">Pós-pago</div>
+                </div>
+                <div class="stat-chip">
+                    <div class="value">24/7</div>
+                    <div class="label">Disponível</div>
+                </div>
             </div>
         </div>
+
+        <div class="brand-footer">Angola · © 2025 Gestão de Energia</div>
     </div>
-</div>
 
-<style>
-    body { overflow: hidden; }
-    .card {
-        transition: transform 0.3s ease;
-        border-radius: 20px !important;
-    }
-    .btn-primary {
-        background: linear-gradient(45deg, #0d6efd, #0dcaf0);
-        border: none;
-        padding: 12px;
-    }
-    .btn-primary:hover {
-        background: linear-gradient(45deg, #0b5ed7, #0bacbe);
-        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
-    }
-    .input-group-text { border-right: none; }
-</style>
+    <!-- RIGHT — Login Panel -->
+    <div class="login-panel">
+        <div class="login-heading">
+            <h1>Entrar no sistema</h1>
+            <p>Insira as suas credenciais para aceder à plataforma</p>
+        </div>
 
-<script>
-    (function () {
-      'use strict'
-      var forms = document.querySelectorAll('.needs-validation')
-      var loginBtn = document.getElementById('loginBtn')
-      var loginSpinner = document.getElementById('loginSpinner')
-      var loginText = document.getElementById('loginText')
+        {% if form.errors or form.non_field_errors %}
+        <div class="alert-error" id="errorAlert">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>Utilizador ou senha incorretos. Tente novamente.</span>
+        </div>
+        {% endif %}
 
-      Array.prototype.slice.call(forms).forEach(function (form) {
-          form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-              event.preventDefault()
-              event.stopPropagation()
-            } else {
-              // Se for válido, mostrar loading
-              loginBtn.disabled = true
-              loginSpinner.classList.remove('d-none')
-              loginText.textContent = 'Autenticando...'
+        <form method="post" id="loginForm" novalidate>
+            {% csrf_token %}
+
+            <div class="field-group">
+                <label for="{{ form.username.id_for_label }}">Utilizador</label>
+                <div class="input-wrap">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </span>
+                    <input
+                        type="text"
+                        name="username"
+                        id="{{ form.username.id_for_label }}"
+                        placeholder="Nome de utilizador"
+                        autocomplete="username"
+                        {% if form.username.errors %}class="is-invalid"{% endif %}
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="field-group">
+                <label for="{{ form.password.id_for_label }}">Senha</label>
+                <div class="input-wrap">
+                    <span class="icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </span>
+                    <input
+                        type="password"
+                        name="password"
+                        id="{{ form.password.id_for_label }}"
+                        placeholder="Senha de acesso"
+                        autocomplete="current-password"
+                        {% if form.password.errors %}class="is-invalid"{% endif %}
+                        required
+                    >
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Mostrar/ocultar senha">
+                        <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="submitBtn">
+                <div class="spin" id="spinner"></div>
+                <svg id="arrowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+                </svg>
+                <span id="btnLabel">Entrar</span>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            Acesso restrito · Apenas utilizadores autorizados
+        </div>
+    </div>
+
+    <script>
+        // Toggle password visibility
+        const togglePw = document.getElementById('togglePw');
+        const pwInput  = document.querySelector('input[name="password"]');
+        const eyeIcon  = document.getElementById('eyeIcon');
+
+        const eyeOpen = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+        const eyeOff  = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
+
+        togglePw.addEventListener('click', () => {
+            const isHidden = pwInput.type === 'password';
+            pwInput.type  = isHidden ? 'text' : 'password';
+            eyeIcon.innerHTML = isHidden ? eyeOff : eyeOpen;
+        });
+
+        // Form submit loading state
+        const form      = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const spinner   = document.getElementById('spinner');
+        const arrowIcon = document.getElementById('arrowIcon');
+        const btnLabel  = document.getElementById('btnLabel');
+
+        form.addEventListener('submit', function(e) {
+            const user = document.querySelector('input[name="username"]').value.trim();
+            const pass = document.querySelector('input[name="password"]').value;
+            if (!user || !pass) {
+                e.preventDefault();
+                return;
             }
-            form.classList.add('was-validated')
-          }, false)
-      })
-    })()
-</script>
-{% endblock %}
+            submitBtn.disabled   = true;
+            spinner.style.display   = 'block';
+            arrowIcon.style.display = 'none';
+            btnLabel.textContent    = 'A autenticar…';
+        });
+    </script>
+</body>
+</html>
