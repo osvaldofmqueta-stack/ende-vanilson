@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 from clientes.models import Cliente
 
 class Contador(models.Model):
@@ -37,8 +38,19 @@ class Contador(models.Model):
     
     def __str__(self):
         return f"{self.numero_serie} - {self.cliente.nome if self.cliente else 'Sem Cliente'}"
-    
+
+    def clean(self):
+        if self.cliente and self.cliente.tipo_cliente != 'PRE_PAGO':
+            raise ValidationError(
+                {'cliente': f'O cliente "{self.cliente.nome}" é pós-pago. Contadores são exclusivos para clientes pré-pagos.'}
+            )
+
     def save(self, *args, **kwargs):
+        if self.cliente and self.cliente.tipo_cliente != 'PRE_PAGO':
+            raise ValidationError(
+                f'Não é possível associar o cliente "{self.cliente.nome}" (pós-pago) a um contador. '
+                'Contadores são exclusivos para clientes pré-pagos.'
+            )
         super().save(*args, **kwargs)
 
 
