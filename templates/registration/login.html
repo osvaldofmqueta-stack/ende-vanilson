@@ -12,248 +12,197 @@
         body {
             font-family: 'Inter', system-ui, sans-serif;
             min-height: 100vh;
-            display: flex;
-            background: #0f172a;
+            overflow: hidden;
+            background: #0b1220;
         }
 
-        /* ── LEFT PANEL ───────────────────────────────── */
-        .brand-panel {
-            flex: 1;
-            position: relative;
+        /* ── DASHBOARD MOCKUP BACKGROUND ─────────────── */
+        .app-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 3rem;
+            gap: 0;
+            background: #f0f4f8;
             overflow: hidden;
-            background: linear-gradient(145deg, #0f172a 0%, #1e3a5f 50%, #0c4a6e 100%);
+            transform: scale(1.04);
         }
 
-        /* Animated energy grid background */
-        .brand-panel::before {
+        /* Fake navbar */
+        .mock-nav {
+            height: 56px;
+            background: #1a3a5c;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+        .mock-nav-logo {
+            width: 32px; height: 32px;
+            background: linear-gradient(135deg,#0ea5e9,#7c3aed);
+            border-radius: 8px;
+        }
+        .mock-nav-title { width: 160px; height: 14px; background: rgba(255,255,255,0.25); border-radius: 6px; }
+        .mock-nav-links { display:flex; gap:12px; margin-left: 32px; }
+        .mock-nav-link  { width: 70px; height: 10px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+        .mock-nav-right { margin-left: auto; display:flex; gap:10px; align-items:center; }
+        .mock-nav-btn   { width: 32px; height: 32px; background: rgba(255,255,255,0.12); border-radius: 50%; }
+
+        .mock-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Fake sidebar */
+        .mock-sidebar {
+            width: 220px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 20px 0;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .mock-menu-item {
+            height: 36px;
+            margin: 0 12px;
+            border-radius: 8px;
+            display: flex; align-items:center; padding: 0 12px; gap: 10px;
+        }
+        .mock-menu-item.active { background: #e8f0f7; }
+        .mock-menu-icon { width: 16px; height: 16px; background: #94a3b8; border-radius: 4px; flex-shrink: 0; }
+        .mock-menu-item.active .mock-menu-icon { background: #2d6a9f; }
+        .mock-menu-label { height: 8px; background: #d1d5db; border-radius: 4px; flex: 1; }
+        .mock-menu-item.active .mock-menu-label { background: #2d6a9f; opacity:0.6; }
+
+        /* Fake content */
+        .mock-content {
+            flex: 1;
+            padding: 24px;
+            overflow: hidden;
+        }
+        .mock-page-title { width: 180px; height: 18px; background: #1a3a5c; border-radius: 6px; margin-bottom: 20px; opacity:0.7; }
+
+        /* Stats row */
+        .mock-stats { display: flex; gap: 16px; margin-bottom: 20px; }
+        .mock-stat-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .mock-stat-label { height: 8px; border-radius: 4px; background: #e2e8f0; margin-bottom: 10px; width: 60%; }
+        .mock-stat-value { height: 22px; border-radius: 6px; width: 70%; }
+        .mock-stat-card:nth-child(1) .mock-stat-value { background: #bfdbfe; }
+        .mock-stat-card:nth-child(2) .mock-stat-value { background: #bbf7d0; }
+        .mock-stat-card:nth-child(3) .mock-stat-value { background: #fde68a; }
+        .mock-stat-card:nth-child(4) .mock-stat-value { background: #fecaca; }
+
+        /* Table mockup */
+        .mock-table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+        .mock-table-header { display: flex; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #f1f5f9; }
+        .mock-table-col { height: 8px; border-radius: 4px; background: #cbd5e1; }
+        .mock-table-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        .mock-table-row .mock-table-col { background: #e2e8f0; opacity: 0.7; }
+        .mock-table-row:nth-child(even) .mock-table-col { opacity: 0.45; }
+
+        /* Chart area */
+        .mock-chart-row { display:flex; gap:16px; }
+        .mock-chart-card {
+            flex:1;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+            height: 110px;
+            display:flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .mock-bar { flex:1; background: linear-gradient(to top, #bfdbfe, #93c5fd); border-radius: 4px 4px 0 0; }
+
+        /* ── OVERLAY ─────────────────────────────────── */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            background: rgba(11, 18, 32, 0.72);
+            backdrop-filter: blur(3px);
+        }
+
+        /* ── LOGIN CARD ─────────────────────────────── */
+        .login-wrapper {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255,255,255,0.97);
+            border-radius: 20px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.12);
+            overflow: hidden;
+        }
+
+        .login-card-header {
+            background: linear-gradient(135deg, #1a3a5c 0%, #0c4a6e 100%);
+            padding: 1.75rem 2rem 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+        .login-card-header::after {
             content: '';
             position: absolute;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(56,189,248,0.06) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.06) 1px, transparent 1px);
-            background-size: 48px 48px;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0%   { background-position: 0 0; }
-            100% { background-position: 48px 48px; }
-        }
-
-        /* Glowing orbs */
-        .orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            animation: pulse 6s ease-in-out infinite;
-        }
-        .orb-1 {
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, #0ea5e9, transparent 70%);
-            top: -100px; left: -100px;
-            animation-delay: 0s;
-        }
-        .orb-2 {
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, #7c3aed, transparent 70%);
-            bottom: -80px; right: -80px;
-            animation-delay: 3s;
-        }
-        .orb-3 {
-            width: 200px; height: 200px;
-            background: radial-gradient(circle, #06b6d4, transparent 70%);
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            animation-delay: 1.5s;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50%       { opacity: 0.5; transform: scale(1.08); }
-        }
-
-        .brand-content {
-            position: relative;
-            z-index: 2;
-            text-align: center;
+            bottom: -1px; left: 0; right: 0;
+            height: 20px;
+            background: rgba(255,255,255,0.97);
+            clip-path: ellipse(55% 100% at 50% 100%);
         }
 
         .logo-ring {
-            width: 90px; height: 90px;
+            width: 64px; height: 64px;
             border-radius: 50%;
             background: linear-gradient(135deg, #0ea5e9, #7c3aed);
             display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 0 0 16px rgba(14,165,233,0.1), 0 0 40px rgba(14,165,233,0.4);
-            animation: ringPulse 3s ease-in-out infinite;
+            margin: 0 auto 1rem;
+            box-shadow: 0 0 0 10px rgba(14,165,233,0.15), 0 0 30px rgba(14,165,233,0.4);
         }
-        @keyframes ringPulse {
-            0%, 100% { box-shadow: 0 0 0 16px rgba(14,165,233,0.1), 0 0 40px rgba(14,165,233,0.3); }
-            50%       { box-shadow: 0 0 0 24px rgba(14,165,233,0.05), 0 0 60px rgba(14,165,233,0.5); }
-        }
-        .logo-ring svg { width: 42px; height: 42px; color: white; }
+        .logo-ring svg { width: 30px; height: 30px; color: white; }
 
-        .brand-title {
-            font-size: 2rem;
+        .login-card-header h1 {
+            font-size: 1.3rem;
             font-weight: 800;
             color: white;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
+            margin: 0;
         }
-        .brand-title span {
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .brand-sub {
+        .login-card-header p {
+            font-size: 0.8rem;
             color: rgba(148,163,184,0.9);
-            font-size: 0.95rem;
-            margin-top: 0.75rem;
-            font-weight: 400;
+            margin-top: 4px;
         }
 
-        .stats-row {
-            display: flex;
-            gap: 1.5rem;
-            margin-top: 3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .stat-chip {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            min-width: 110px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-        .stat-chip .value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #38bdf8;
-        }
-        .stat-chip .label {
-            font-size: 0.72rem;
-            color: rgba(148,163,184,0.8);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
+        .login-card-body {
+            padding: 1.5rem 2rem 1.75rem;
         }
 
-        .brand-footer {
-            position: absolute;
-            bottom: 1.5rem;
-            font-size: 0.78rem;
-            color: rgba(148,163,184,0.5);
-        }
-
-        /* ── RIGHT PANEL ──────────────────────────────── */
-        .login-panel {
-            width: 480px;
-            min-width: 480px;
-            background: #ffffff;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 3rem 3.5rem;
-            position: relative;
-        }
-
-        .login-panel .back-logo {
-            display: none;
-        }
-
-        .login-heading {
-            margin-bottom: 2.5rem;
-        }
-        .login-heading h1 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #0f172a;
-            letter-spacing: -0.5px;
-        }
-        .login-heading p {
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-top: 0.4rem;
-        }
-
-        /* Form */
-        .field-group {
-            margin-bottom: 1.25rem;
-        }
-        .field-group label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 0.45rem;
-            letter-spacing: 0.2px;
-        }
-        .input-wrap {
-            position: relative;
-        }
-        .input-wrap .icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            display: flex;
-        }
-        .input-wrap .icon svg { width: 18px; height: 18px; }
-
-        .input-wrap input {
-            width: 100%;
-            height: 48px;
-            padding: 0 44px;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 0.92rem;
-            color: #0f172a;
-            background: #f8fafc;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
-            outline: none;
-        }
-        .input-wrap input:focus {
-            border-color: #0ea5e9;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
-        }
-        .input-wrap input.is-invalid {
-            border-color: #ef4444;
-            background: #fff5f5;
-        }
-        .input-wrap input.is-invalid:focus {
-            box-shadow: 0 0 0 3px rgba(239,68,68,0.12);
-        }
-
-        /* Toggle password */
-        .toggle-pw {
-            position: absolute;
-            right: 13px;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-            background: none;
-            color: #94a3b8;
-            cursor: pointer;
-            padding: 4px;
-            display: flex;
-            transition: color 0.2s;
-        }
-        .toggle-pw:hover { color: #475569; }
-        .toggle-pw svg { width: 18px; height: 18px; }
-
-        /* Error alert */
+        /* Error */
         .alert-error {
             display: flex;
             align-items: center;
@@ -261,243 +210,381 @@
             background: #fef2f2;
             border: 1px solid #fecaca;
             border-radius: 10px;
-            padding: 0.75rem 1rem;
-            margin-bottom: 1.5rem;
-            font-size: 0.875rem;
+            padding: 0.65rem 1rem;
+            margin-bottom: 1.25rem;
+            font-size: 0.85rem;
             color: #b91c1c;
             animation: shake 0.4s ease;
         }
-        .alert-error svg { width: 18px; height: 18px; flex-shrink: 0; color: #ef4444; }
+        .alert-error svg { width: 16px; height: 16px; flex-shrink: 0; }
         @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            20%       { transform: translateX(-6px); }
-            40%       { transform: translateX(6px); }
-            60%       { transform: translateX(-4px); }
-            80%       { transform: translateX(4px); }
+            0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}
         }
 
-        /* Submit button */
-        .btn-login {
-            width: 100%;
-            height: 50px;
-            border: none;
+        /* Fields */
+        .field-group { margin-bottom: 1rem; }
+        .field-group label {
+            display: block;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.2px;
+        }
+        .input-wrap { position: relative; }
+        .input-wrap .icon {
+            position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+            color: #94a3b8; display: flex;
+        }
+        .input-wrap .icon svg { width: 16px; height: 16px; }
+        .input-wrap input {
+            width: 100%; height: 44px;
+            padding: 0 40px;
+            border: 1.5px solid #e2e8f0;
             border-radius: 10px;
+            font-size: 0.9rem;
+            color: #0f172a;
+            background: #f8fafc;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+            outline: none;
+        }
+        .input-wrap input:focus {
+            border-color: #0ea5e9;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(14,165,233,0.12);
+        }
+        .input-wrap input.is-invalid { border-color: #ef4444; background: #fff5f5; }
+        .toggle-pw {
+            position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+            border: none; background: none; color: #94a3b8; cursor: pointer; padding: 4px; display: flex;
+        }
+        .toggle-pw svg { width: 16px; height: 16px; }
+
+        /* Submit */
+        .btn-login {
+            width: 100%; height: 46px; border: none; border-radius: 10px;
             background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            margin-top: 0.5rem;
+            color: white; font-size: 0.92rem; font-weight: 700;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all .2s; margin-top: 0.25rem;
             box-shadow: 0 4px 14px rgba(14,165,233,0.35);
         }
         .btn-login:hover:not(:disabled) {
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(14,165,233,0.45);
-            background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
         }
-        .btn-login:active:not(:disabled) {
-            transform: translateY(0);
-            box-shadow: 0 2px 8px rgba(14,165,233,0.3);
-        }
-        .btn-login:disabled {
-            opacity: 0.75;
-            cursor: not-allowed;
-        }
-        .btn-login svg { width: 18px; height: 18px; }
-
-        /* Spinner */
+        .btn-login:disabled { opacity:.75; cursor:not-allowed; }
+        .btn-login svg { width: 16px; height: 16px; }
         .spin {
-            width: 18px; height: 18px;
-            border: 2px solid rgba(255,255,255,0.35);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: none;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,.35);
+            border-top-color: white; border-radius: 50%;
+            animation: spin .7s linear infinite; display: none;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .login-footer {
-            margin-top: 2.5rem;
-            padding-top: 1.5rem;
+        /* Credentials box */
+        .creds-box {
+            margin-top: 1.25rem;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        .creds-box-header {
+            background: #f8fafc;
+            padding: 0.55rem 1rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex; align-items: center; gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .creds-box-header svg { width: 14px; height: 14px; }
+        .creds-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .creds-table th {
+            padding: 6px 12px;
+            background: #f1f5f9;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            text-align: left;
+        }
+        .creds-table td {
+            padding: 7px 12px;
+            color: #1e293b;
             border-top: 1px solid #f1f5f9;
-            text-align: center;
+        }
+        .creds-table tr:hover td { background: #f8fafc; }
+        .creds-table td code {
+            background: #e8f0f7;
+            color: #1a3a5c;
+            padding: 1px 6px;
+            border-radius: 4px;
             font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .badge-role {
+            font-size: 0.65rem; font-weight: 700;
+            padding: 2px 7px; border-radius: 20px;
+        }
+        .badge-admin { background: #dbeafe; color: #1d4ed8; }
+        .badge-fin   { background: #d1fae5; color: #065f46; }
+        .badge-oper  { background: #fef3c7; color: #92400e; }
+
+        .login-footer {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.72rem;
             color: #94a3b8;
         }
 
-        /* Responsive: stack on small screens */
-        @media (max-width: 900px) {
-            body { flex-direction: column; }
-            .brand-panel { 
-                min-height: 220px; 
-                padding: 2rem 1.5rem; 
-                flex: none;
-            }
-            .stats-row { display: none; }
-            .login-panel {
-                width: 100%;
-                min-width: unset;
-                padding: 2rem 1.5rem;
-            }
+        @media (max-width: 500px) {
+            .login-card-body { padding: 1.25rem 1.25rem 1.5rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- LEFT — Brand Panel -->
-    <div class="brand-panel">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-
-        <div class="brand-content">
-            <div class="logo-ring">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
+    <!-- ── DASHBOARD MOCKUP BACKGROUND ── -->
+    <div class="app-bg">
+        <div class="mock-nav">
+            <div class="mock-nav-logo"></div>
+            <div class="mock-nav-title"></div>
+            <div class="mock-nav-links">
+                <div class="mock-nav-link"></div>
+                <div class="mock-nav-link"></div>
+                <div class="mock-nav-link"></div>
+                <div class="mock-nav-link" style="width:50px;"></div>
             </div>
-
-            <div class="brand-title">
-                Sistema de Gestão<br>de <span>Energia</span>
+            <div class="mock-nav-right">
+                <div class="mock-nav-btn"></div>
+                <div class="mock-nav-btn"></div>
             </div>
-            <p class="brand-sub">Plataforma integrada para gestão de clientes,<br>contadores e faturação energética</p>
-
-            <div class="stats-row">
-                <div class="stat-chip">
-                    <div class="value">Pré</div>
-                    <div class="label">Pré-pago</div>
+        </div>
+        <div class="mock-body">
+            <div class="mock-sidebar">
+                {% for active in "10000000"|make_list %}
+                <div class="mock-menu-item {% if forloop.first %}active{% endif %}">
+                    <div class="mock-menu-icon"></div>
+                    <div class="mock-menu-label"></div>
                 </div>
-                <div class="stat-chip">
-                    <div class="value">Pós</div>
-                    <div class="label">Pós-pago</div>
+                {% endfor %}
+            </div>
+            <div class="mock-content">
+                <div class="mock-page-title"></div>
+                <div class="mock-stats">
+                    {% for _ in "1234"|make_list %}
+                    <div class="mock-stat-card">
+                        <div class="mock-stat-label"></div>
+                        <div class="mock-stat-value"></div>
+                    </div>
+                    {% endfor %}
                 </div>
-                <div class="stat-chip">
-                    <div class="value">24/7</div>
-                    <div class="label">Disponível</div>
+                <div class="mock-chart-row mb-3">
+                    <div class="mock-chart-card">
+                        {% for h in "4060805570657580"|make_list %}
+                        {% if forloop.counter0|divisibleby:1 %}
+                        <div class="mock-bar" style="height:{{ forloop.counter0|add:'3' }}0%;"></div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="mock-chart-card" style="background:#f8fafc;">
+                        {% for _ in "12345678"|make_list %}
+                        <div class="mock-bar" style="height:{% if forloop.counter == 1 %}40{% elif forloop.counter == 2 %}65{% elif forloop.counter == 3 %}50{% elif forloop.counter == 4 %}80{% elif forloop.counter == 5 %}55{% elif forloop.counter == 6 %}70{% elif forloop.counter == 7 %}45{% else %}75{% endif %}%; background: linear-gradient(to top,#bbf7d0,#86efac);"></div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="mock-table-card">
+                    <div class="mock-table-header">
+                        <div class="mock-table-col" style="width:15%;"></div>
+                        <div class="mock-table-col" style="width:25%;"></div>
+                        <div class="mock-table-col" style="width:12%;"></div>
+                        <div class="mock-table-col" style="width:18%;"></div>
+                        <div class="mock-table-col" style="width:10%;"></div>
+                    </div>
+                    {% for _ in "12345"|make_list %}
+                    <div class="mock-table-row">
+                        <div class="mock-table-col" style="width:15%;"></div>
+                        <div class="mock-table-col" style="width:25%;"></div>
+                        <div class="mock-table-col" style="width:12%;"></div>
+                        <div class="mock-table-col" style="width:18%;"></div>
+                        <div class="mock-table-col" style="width:10%;"></div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
-
-        <div class="brand-footer">Angola · © 2025 Gestão de Energia</div>
     </div>
 
-    <!-- RIGHT — Login Panel -->
-    <div class="login-panel">
-        <div class="login-heading">
-            <h1>Entrar no sistema</h1>
-            <p>Insira as suas credenciais para aceder à plataforma</p>
-        </div>
+    <!-- ── BLUR OVERLAY ── -->
+    <div class="overlay"></div>
 
-        {% if form.errors or form.non_field_errors %}
-        <div class="alert-error" id="errorAlert">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
-            <span>Utilizador ou senha incorretos. Tente novamente.</span>
-        </div>
-        {% endif %}
+    <!-- ── LOGIN CARD ── -->
+    <div class="login-wrapper">
+        <div class="login-card">
 
-        <form method="post" id="loginForm" novalidate>
-            {% csrf_token %}
-
-            <div class="field-group">
-                <label for="{{ form.username.id_for_label }}">Utilizador</label>
-                <div class="input-wrap">
-                    <span class="icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
-                        </svg>
-                    </span>
-                    <input
-                        type="text"
-                        name="username"
-                        id="{{ form.username.id_for_label }}"
-                        placeholder="Nome de utilizador"
-                        autocomplete="username"
-                        {% if form.username.errors %}class="is-invalid"{% endif %}
-                        required
-                    >
+            <div class="login-card-header">
+                <div class="logo-ring">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                    </svg>
                 </div>
+                <h1>Entrar no Sistema</h1>
+                <p>Insira as suas credenciais para aceder à plataforma</p>
             </div>
 
-            <div class="field-group">
-                <label for="{{ form.password.id_for_label }}">Senha</label>
-                <div class="input-wrap">
-                    <span class="icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <div class="login-card-body">
+
+                {% if form.errors or form.non_field_errors %}
+                <div class="alert-error">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    <span>Utilizador ou senha incorretos. Tente novamente.</span>
+                </div>
+                {% endif %}
+
+                <form method="post" id="loginForm" novalidate>
+                    {% csrf_token %}
+
+                    <div class="field-group">
+                        <label for="{{ form.username.id_for_label }}">Utilizador</label>
+                        <div class="input-wrap">
+                            <span class="icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </span>
+                            <input type="text" name="username" id="{{ form.username.id_for_label }}"
+                                placeholder="Nome de utilizador" autocomplete="username"
+                                {% if form.username.errors %}class="is-invalid"{% endif %} required>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="{{ form.password.id_for_label }}">Senha</label>
+                        <div class="input-wrap">
+                            <span class="icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                            </span>
+                            <input type="password" name="password" id="{{ form.password.id_for_label }}"
+                                placeholder="Senha de acesso" autocomplete="current-password"
+                                {% if form.password.errors %}class="is-invalid"{% endif %} required>
+                            <button type="button" class="toggle-pw" id="togglePw" aria-label="Mostrar/ocultar senha">
+                                <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login" id="submitBtn">
+                        <div class="spin" id="spinner"></div>
+                        <svg id="arrowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
                         </svg>
-                    </span>
-                    <input
-                        type="password"
-                        name="password"
-                        id="{{ form.password.id_for_label }}"
-                        placeholder="Senha de acesso"
-                        autocomplete="current-password"
-                        {% if form.password.errors %}class="is-invalid"{% endif %}
-                        required
-                    >
-                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Mostrar/ocultar senha">
-                        <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
-                        </svg>
+                        <span id="btnLabel">Entrar</span>
                     </button>
+                </form>
+
+                <!-- Credenciais de Acesso -->
+                <div class="creds-box">
+                    <div class="creds-box-header" id="credsToggle" onclick="toggleCreds()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        Credenciais de Acesso Padrão
+                        <svg id="credsChevron" style="margin-left:auto; transition:.2s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div id="credsBody" style="display:none;">
+                        <table class="creds-table">
+                            <thead>
+                                <tr>
+                                    <th>Função</th>
+                                    <th>Utilizador</th>
+                                    <th>Senha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge-role badge-admin">Administrador</span></td>
+                                    <td><code>admin</code></td>
+                                    <td><code>admin@2025</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-role badge-fin">Financeiro</span></td>
+                                    <td><code>financeiro</code></td>
+                                    <td><code>fin@2025</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-role badge-oper">Operador</span></td>
+                                    <td><code>operador</code></td>
+                                    <td><code>oper@2025</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <div class="login-footer">Angola · © 2025 Sistema de Gestão de Energia</div>
             </div>
-
-            <button type="submit" class="btn-login" id="submitBtn">
-                <div class="spin" id="spinner"></div>
-                <svg id="arrowIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
-                </svg>
-                <span id="btnLabel">Entrar</span>
-            </button>
-        </form>
-
-        <div class="login-footer">
-            Acesso restrito · Apenas utilizadores autorizados
         </div>
     </div>
 
     <script>
-        // Toggle password visibility
         const togglePw = document.getElementById('togglePw');
         const pwInput  = document.querySelector('input[name="password"]');
         const eyeIcon  = document.getElementById('eyeIcon');
-
-        const eyeOpen = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
-        const eyeOff  = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
-
+        const eyeOpen  = `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
+        const eyeOff   = `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`;
         togglePw.addEventListener('click', () => {
             const isHidden = pwInput.type === 'password';
-            pwInput.type  = isHidden ? 'text' : 'password';
+            pwInput.type = isHidden ? 'text' : 'password';
             eyeIcon.innerHTML = isHidden ? eyeOff : eyeOpen;
         });
 
-        // Form submit loading state
         const form      = document.getElementById('loginForm');
         const submitBtn = document.getElementById('submitBtn');
         const spinner   = document.getElementById('spinner');
         const arrowIcon = document.getElementById('arrowIcon');
         const btnLabel  = document.getElementById('btnLabel');
-
         form.addEventListener('submit', function(e) {
             const user = document.querySelector('input[name="username"]').value.trim();
             const pass = document.querySelector('input[name="password"]').value;
-            if (!user || !pass) {
-                e.preventDefault();
-                return;
-            }
-            submitBtn.disabled   = true;
-            spinner.style.display   = 'block';
+            if (!user || !pass) { e.preventDefault(); return; }
+            submitBtn.disabled = true;
+            spinner.style.display = 'block';
             arrowIcon.style.display = 'none';
-            btnLabel.textContent    = 'A autenticar…';
+            btnLabel.textContent = 'A autenticar…';
+        });
+
+        function toggleCreds() {
+            const body    = document.getElementById('credsBody');
+            const chevron = document.getElementById('credsChevron');
+            const open    = body.style.display === 'none';
+            body.style.display    = open ? 'block' : 'none';
+            chevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0)';
+        }
+
+        // Auto-fill on credential row click
+        document.querySelectorAll('.creds-table tbody tr').forEach(row => {
+            row.style.cursor = 'pointer';
+            row.title = 'Clique para preencher';
+            row.addEventListener('click', function() {
+                const codes = this.querySelectorAll('code');
+                document.querySelector('input[name="username"]').value = codes[0].textContent;
+                document.querySelector('input[name="password"]').value = codes[1].textContent;
+            });
         });
     </script>
 </body>

@@ -5,51 +5,99 @@
     <div class="col-md-8">
         <div class="card shadow border-0">
             <div class="card-header bg-primary text-white p-4">
-                <h3 class="mb-0">Registrar Pagamento - Fatura {{ fatura.numero_fatura }}</h3>
+                <h3 class="mb-0">Registar Pagamento — Fatura {{ fatura.numero_fatura }}</h3>
             </div>
             <div class="card-body p-5">
-                <div class="alert alert-info" role="alert">
-                    <strong>Valor a Pagar:</strong> {{ fatura.valor_total }} Kz
+
+                {% if dias_atraso > 0 %}
+                <div class="alert alert-danger border-0 rounded-3 mb-4" style="background:#fff5f5; border-left:4px solid #dc3545 !important;">
+                    <div class="d-flex align-items-start gap-3">
+                        <span style="font-size:1.5rem;">⚠️</span>
+                        <div>
+                            <strong>Fatura em atraso — {{ dias_atraso }} dia{{ dias_atraso|pluralize }} de atraso</strong>
+                            <div class="mt-2 small">
+                                <div class="row g-2">
+                                    <div class="col-sm-4">
+                                        <div class="rounded p-2 text-center" style="background:#fff0f0;">
+                                            <div class="text-muted" style="font-size:0.7rem;">Valor Original</div>
+                                            <div class="fw-bold text-dark">{{ fatura.valor_consumo|floatformat:2 }} Kz</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="rounded p-2 text-center" style="background:#fff0f0;">
+                                            <div class="text-muted" style="font-size:0.7rem;">Multa por Atraso ({{ dias_atraso }}d × 2%)</div>
+                                            <div class="fw-bold text-danger">+ {{ multa_calculada|floatformat:2 }} Kz</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="rounded p-2 text-center" style="background:#fde8e8;">
+                                            <div class="text-muted" style="font-size:0.7rem;">Total com Multa</div>
+                                            <div class="fw-bold text-danger fs-5">{{ valor_com_multa|floatformat:2 }} Kz</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                {% else %}
+                <div class="alert alert-success border-0 rounded-3 mb-4 d-flex align-items-center gap-3">
+                    <span style="font-size:1.3rem;">✅</span>
+                    <div>
+                        <strong>Pagamento dentro do prazo</strong>
+                        <div class="small text-muted">Vencimento: {{ fatura.data_vencimento|date:"d/m/Y" }} — Sem multa aplicável</div>
+                    </div>
+                    <div class="ms-auto text-end">
+                        <div class="text-muted small">Total a Pagar</div>
+                        <div class="fw-bold fs-5 text-success">{{ fatura.valor_total|floatformat:2 }} Kz</div>
+                    </div>
+                </div>
+                {% endif %}
 
                 <form method="post" class="needs-validation">
                     {% csrf_token %}
-                    
+
                     <div class="mb-3">
-                        <label for="{{ form.valor_pago.id_for_label }}" class="form-label">Valor Pago (Kz) <span class="text-danger">*</span></label>
+                        <label for="{{ form.valor_pago.id_for_label }}" class="form-label fw-semibold">
+                            Valor Pago (Kz) <span class="text-danger">*</span>
+                        </label>
                         {{ form.valor_pago }}
                         {% if form.valor_pago.errors %}
-                            <div class="text-danger mt-2">{{ form.valor_pago.errors }}</div>
+                            <div class="text-danger mt-2 small">{{ form.valor_pago.errors }}</div>
                         {% endif %}
                     </div>
 
                     <div class="mb-3">
-                        <label for="{{ form.metodo_pagamento.id_for_label }}" class="form-label">Método de Pagamento <span class="text-danger">*</span></label>
+                        <label for="{{ form.metodo_pagamento.id_for_label }}" class="form-label fw-semibold">
+                            Método de Pagamento <span class="text-danger">*</span>
+                        </label>
                         {{ form.metodo_pagamento }}
                         {% if form.metodo_pagamento.errors %}
-                            <div class="text-danger mt-2">{{ form.metodo_pagamento.errors }}</div>
+                            <div class="text-danger mt-2 small">{{ form.metodo_pagamento.errors }}</div>
                         {% endif %}
                     </div>
 
                     <div class="mb-3" id="multicaixa-field">
-                        <label for="{{ form.referencia_multicaixa.id_for_label }}" class="form-label">Referência Multicaixa</label>
+                        <label for="{{ form.referencia_multicaixa.id_for_label }}" class="form-label fw-semibold">
+                            Referência Multicaixa
+                        </label>
                         {{ form.referencia_multicaixa }}
-                        <small class="form-text text-muted">Informar apenas se o pagamento foi via Multicaixa</small>
+                        <small class="form-text text-muted">Preencher apenas se o pagamento for via Multicaixa</small>
                         {% if form.referencia_multicaixa.errors %}
-                            <div class="text-danger mt-2">{{ form.referencia_multicaixa.errors }}</div>
+                            <div class="text-danger mt-2 small">{{ form.referencia_multicaixa.errors }}</div>
                         {% endif %}
                     </div>
 
-                    <div class="mb-3">
-                        <label for="{{ form.observacoes.id_for_label }}" class="form-label">Observações</label>
+                    <div class="mb-4">
+                        <label for="{{ form.observacoes.id_for_label }}" class="form-label fw-semibold">Observações</label>
                         {{ form.observacoes }}
                         {% if form.observacoes.errors %}
-                            <div class="text-danger mt-2">{{ form.observacoes.errors }}</div>
+                            <div class="text-danger mt-2 small">{{ form.observacoes.errors }}</div>
                         {% endif %}
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button type="submit" class="btn btn-primary btn-lg">Registrar Pagamento</button>
+                        <button type="submit" class="btn btn-primary btn-lg px-5">Registar Pagamento</button>
                         <a href="{% url 'fatura_detail' fatura.pk %}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
                     </div>
                 </form>
@@ -60,17 +108,12 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const metodoSelect = document.querySelector('[name="metodo_pagamento"]');
+    const metodoSelect   = document.querySelector('[name="metodo_pagamento"]');
     const multicaixaField = document.getElementById('multicaixa-field');
-    
+
     function toggleMulticaixa() {
-        if (metodoSelect.value === 'MULTICAIXA') {
-            multicaixaField.style.display = 'block';
-        } else {
-            multicaixaField.style.display = 'none';
-        }
+        multicaixaField.style.display = metodoSelect.value === 'MULTICAIXA' ? 'block' : 'none';
     }
-    
     metodoSelect.addEventListener('change', toggleMulticaixa);
     toggleMulticaixa();
 });

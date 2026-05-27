@@ -158,24 +158,42 @@ def fatura_detail(request, pk):
 @login_required
 @csrf_protect
 def registrar_pagamento(request, pk):
+    from datetime import date as _date
     fatura = get_object_or_404(Fatura, pk=pk)
-    
+
+    hoje = _date.today()
+    dias_atraso = max((hoje - fatura.data_vencimento).days, 0) if fatura.status != 'PAGO' else 0
+    TAXA_DIARIA   = Decimal('0.02')
+    TAXA_MAX      = Decimal('0.20')
+    multa_calculada = Decimal('0.00')
+    if dias_atraso > 0:
+        taxa = min(TAXA_DIARIA * dias_atraso, TAXA_MAX)
+        multa_calculada = (fatura.valor_consumo + fatura.outras_taxas) * taxa
+    valor_com_multa = fatura.valor_consumo + fatura.outras_taxas + multa_calculada
+
     if request.method == 'POST':
         form = PagamentoForm(request.POST)
         if form.is_valid():
             pagamento = form.save(commit=False)
             pagamento.fatura = fatura
+            if dias_atraso > 0 and multa_calculada > 0:
+                fatura.multa_atraso = multa_calculada
+                fatura.valor_total  = valor_com_multa
+                fatura.save(update_fields=['multa_atraso', 'valor_total'])
             pagamento.save()
-            messages.success(request, f"Pagamento de {pagamento.valor_pago} Kz registrado com sucesso!")
+            messages.success(request, f"Pagamento de {pagamento.valor_pago:,.2f} Kz registado com sucesso!")
             return redirect('fatura_detail', pk=fatura.pk)
         else:
-            messages.error(request, "Erro ao registrar pagamento. Verifique os dados inseridos.")
+            messages.error(request, "Erro ao registar pagamento. Verifique os dados inseridos.")
     else:
-        form = PagamentoForm(initial={'valor_pago': fatura.valor_total})
-    
+        form = PagamentoForm(initial={'valor_pago': valor_com_multa})
+
     return render(request, 'pagamentos/registrar_pagamento.html', {
-        'fatura': fatura, 
-        'form': form
+        'fatura':          fatura,
+        'form':            form,
+        'dias_atraso':     dias_atraso,
+        'multa_calculada': multa_calculada,
+        'valor_com_multa': valor_com_multa,
     })
 
 @login_required
