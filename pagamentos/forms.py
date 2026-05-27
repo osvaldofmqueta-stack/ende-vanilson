@@ -1,6 +1,7 @@
 from django import apps
 from django import forms
 from .models import Tarifa, Fatura, Pagamento
+from clientes.models import Cliente
 
 class FaturaSimplesForm(forms.ModelForm):
     class Meta:
@@ -16,6 +17,19 @@ class FaturaSimplesForm(forms.ModelForm):
             'data_emissao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'data_vencimento': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cliente'].queryset = Cliente.objects.filter(tipo_cliente='POS_PAGO', status='ATIVO')
+        self.fields['cliente'].empty_label = 'Selecionar cliente pós-pago...'
+
+    def clean_cliente(self):
+        cliente = self.cleaned_data.get('cliente')
+        if cliente and cliente.tipo_cliente != 'POS_PAGO':
+            raise forms.ValidationError(
+                f'O cliente "{cliente.nome}" é pré-pago. Faturas são exclusivas para clientes pós-pagos.'
+            )
+        return cliente
 
 class TarifaForm(forms.ModelForm):
     class Meta:

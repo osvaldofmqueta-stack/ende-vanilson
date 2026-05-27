@@ -3,25 +3,82 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card shadow">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Emitir Fatura Simples</h4>
+
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <a href="{% url 'fatura_list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
+            <div>
+                <h3 class="mb-0 fw-bold">Emitir Fatura</h3>
+                <small class="text-muted">Faturas exclusivas para clientes pós-pagos</small>
             </div>
-            <div class="card-body">
+        </div>
+
+        <div class="alert alert-info d-flex gap-2 align-items-start py-2 mb-4">
+            <span style="font-size:1.1rem;">ℹ️</span>
+            <span>Apenas clientes do tipo <strong>Pós-pago</strong> são apresentados. Para recargas de clientes pré-pagos, utilize o módulo de <strong>Pagamentos &gt; Recargas</strong>.</span>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.errors %}
-                        <div class="text-danger small">{{ field.errors|first }}</div>
-                        {% endif %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                    {% endif %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Cliente Pós-pago <span class="text-danger">*</span></label>
+                            {{ form.cliente }}
+                            {% if form.cliente.errors %}<div class="text-danger small mt-1">{{ form.cliente.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Contador</label>
+                            {{ form.contador }}
+                            {% if form.contador.errors %}<div class="text-danger small mt-1">{{ form.contador.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Período de Referência <span class="text-danger">*</span></label>
+                            {{ form.periodo_referencia }}
+                            {% if form.periodo_referencia.errors %}<div class="text-danger small mt-1">{{ form.periodo_referencia.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Data de Emissão <span class="text-danger">*</span></label>
+                            {{ form.data_emissao }}
+                            {% if form.data_emissao.errors %}<div class="text-danger small mt-1">{{ form.data_emissao.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Data de Vencimento <span class="text-danger">*</span></label>
+                            {{ form.data_vencimento }}
+                            {% if form.data_vencimento.errors %}<div class="text-danger small mt-1">{{ form.data_vencimento.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Leitura Anterior (kWh) <span class="text-danger">*</span></label>
+                            {{ form.leitura_anterior }}
+                            {% if form.leitura_anterior.errors %}<div class="text-danger small mt-1">{{ form.leitura_anterior.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Leitura Actual (kWh) <span class="text-danger">*</span></label>
+                            {{ form.leitura_atual }}
+                            {% if form.leitura_atual.errors %}<div class="text-danger small mt-1">{{ form.leitura_atual.errors|first }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Estado</label>
+                            {{ form.status }}
+                            {% if form.status.errors %}<div class="text-danger small mt-1">{{ form.status.errors|first }}</div>{% endif %}
+                        </div>
                     </div>
-                    {% endfor %}
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-success">Gerar Fatura Agora</button>
-                        <a href="{% url 'fatura_list' %}" class="btn btn-secondary">Cancelar</a>
+
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">Gerar Fatura</button>
+                        <a href="{% url 'fatura_list' %}" class="btn btn-secondary px-4">Cancelar</a>
                     </div>
                 </form>
             </div>
