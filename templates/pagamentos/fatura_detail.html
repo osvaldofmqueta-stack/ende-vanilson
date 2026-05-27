@@ -48,13 +48,13 @@
                                 <td>Consumo de Energia Elétrica</td>
                                 <td class="text-center">{{ fatura.leitura_anterior }}</td>
                                 <td class="text-center">{{ fatura.leitura_atual }}</td>
-                                <td class="text-end">{{ fatura.consumo_kwh }}</td>
-                                <td class="text-end">{{ fatura.valor_consumo }}</td>
+                                <td class="text-end">{{ fatura.consumo_kwh }} kWh</td>
+                                <td class="text-end">{{ fatura.valor_consumo|floatformat:2 }} Kz</td>
                             </tr>
                             {% if fatura.outras_taxas > 0 %}
                             <tr>
-                                <td colspan="4" class="text-end">Taxas Adicionais ({{ fatura.cliente.get_tipo_display }})</td>
-                                <td class="text-end">{{ fatura.outras_taxas }}</td>
+                                <td colspan="4" class="text-end">Taxas Adicionais</td>
+                                <td class="text-end">{{ fatura.outras_taxas|floatformat:2 }} Kz</td>
                             </tr>
                             {% endif %}
                         </tbody>

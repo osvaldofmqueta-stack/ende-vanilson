@@ -126,12 +126,12 @@ def fatura_pdf(request, pk):
 
     y_desc = height - y_offset - 50
     p.drawString(50, y_desc, f"Consumo de Energia ({fatura.consumo_kwh} kWh)")
-    p.drawRightString(540, y_desc, f"{fatura.valor_consumo}")
+    p.drawRightString(540, y_desc, f"{fatura.valor_consumo:,.2f} Kz")
 
     y = y_offset + 50
     if fatura.outras_taxas > 0:
         p.drawString(50, height - y, "Taxas Adicionais")
-        p.drawRightString(540, height - y, f"{fatura.outras_taxas}")
+        p.drawRightString(540, height - y, f"{fatura.outras_taxas:,.2f} Kz")
         y += 20
 
     p.line(50, height - y, 550, height - y)
@@ -188,42 +188,61 @@ def fatura_list(request):
 
 @login_required
 def fatura_create(request):
+    import json as _json
+    from clientes.models import Cliente as _Cliente
+
     if request.method == 'POST':
         form = FaturaSimplesForm(request.POST)
         if form.is_valid():
             fatura = form.save(commit=False)
-            
-            # Lógica simples de cálculo baseada na tarifa do cliente
-            # Se o cliente não tiver tarifa, usamos um valor padrão
-            preco_kwh = Decimal('50.00') # Padrão
+
+            preco_kwh = Decimal('50.00')
             taxa_adicional = Decimal('0.00')
-            
+
             if fatura.cliente.tarifa:
                 preco_kwh = fatura.cliente.tarifa.preco_kwh
                 if fatura.cliente.tipo_cliente == 'POS_PAGO':
                     taxa_adicional = fatura.cliente.tarifa.preco_cliente_pos
                 else:
                     taxa_adicional = fatura.cliente.tarifa.preco_cliente_pre
-            
+
             consumo = fatura.leitura_atual - fatura.leitura_anterior
-            
+
             if consumo < 0:
-                messages.error(request, "A leitura atual não pode ser inferior à anterior.")
-                return render(request, 'pagamentos/fatura_form.html', {'form': form})
+                messages.error(request, "A leitura actual não pode ser inferior à anterior.")
+                tarifas_json = _build_tarifas_json(_Cliente)
+                return render(request, 'pagamentos/fatura_form.html', {'form': form, 'tarifas_json': tarifas_json})
 
             fatura.consumo_kwh = consumo
             fatura.valor_consumo = consumo * preco_kwh
             fatura.outras_taxas = taxa_adicional
             fatura.valor_total = fatura.valor_consumo + taxa_adicional
-            
+
             fatura.save()
-            messages.success(request, "Fatura manual criada com sucesso!")
+            messages.success(request, f"Fatura criada com sucesso! Total a pagar: {fatura.valor_total:,.2f} Kz")
             return redirect('fatura_list')
         else:
             messages.error(request, "Erro ao criar fatura. Verifique os campos.")
     else:
         form = FaturaSimplesForm()
-    return render(request, 'pagamentos/fatura_form.html', {'form': form})
+
+    tarifas_json = _build_tarifas_json(_Cliente)
+    return render(request, 'pagamentos/fatura_form.html', {'form': form, 'tarifas_json': tarifas_json})
+
+
+def _build_tarifas_json(Cliente):
+    import json as _json
+    from decimal import Decimal as _D
+    data = {}
+    for c in Cliente.objects.select_related('tarifa').filter(tipo_cliente='POS_PAGO'):
+        if c.tarifa:
+            preco = float(c.tarifa.preco_kwh)
+            taxa  = float(c.tarifa.preco_cliente_pos)
+        else:
+            preco = 50.0
+            taxa  = 0.0
+        data[str(c.pk)] = {'preco_kwh': preco, 'taxa': taxa}
+    return _json.dumps(data)
 
 @login_required
 def tarifa_list(request):

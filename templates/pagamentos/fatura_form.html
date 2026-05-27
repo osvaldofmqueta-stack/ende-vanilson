@@ -19,7 +19,7 @@
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-4">
-                <form method="post">
+                <form method="post" id="faturaForm">
                     {% csrf_token %}
 
                     {% if form.non_field_errors %}
@@ -76,6 +76,35 @@
                         </div>
                     </div>
 
+                    <!-- Prévia do valor a pagar -->
+                    <div id="previa-pagamento" class="mt-4 d-none">
+                        <hr>
+                        <h6 class="text-muted text-uppercase mb-3" style="font-size:0.75rem; letter-spacing:0.08em;">Prévia do Valor a Pagar</h6>
+                        <div class="row g-2">
+                            <div class="col-sm-4">
+                                <div class="rounded p-3 text-center" style="background:#f0f7ff; border:1px solid #c8dff5;">
+                                    <div class="text-muted small mb-1">Consumo</div>
+                                    <div class="fw-bold fs-5 text-primary" id="prev-consumo">— kWh</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="rounded p-3 text-center" style="background:#f0fff4; border:1px solid #b7e4c7;">
+                                    <div class="text-muted small mb-1">Valor do Consumo</div>
+                                    <div class="fw-bold fs-5 text-success" id="prev-valor-consumo">— Kz</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="rounded p-3 text-center" style="background:#fff8e1; border:1px solid #ffe082;">
+                                    <div class="text-muted small mb-1">Total a Pagar</div>
+                                    <div class="fw-bold fs-4 text-warning" id="prev-total">— Kz</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="prev-alerta" class="alert alert-danger py-2 mt-2 d-none small">
+                            ⚠️ A leitura actual não pode ser inferior à anterior.
+                        </div>
+                    </div>
+
                     <div class="mt-4 d-flex gap-2">
                         <button type="submit" class="btn btn-success px-4">Gerar Fatura</button>
                         <a href="{% url 'fatura_list' %}" class="btn btn-secondary px-4">Cancelar</a>
@@ -85,4 +114,56 @@
         </div>
     </div>
 </div>
+
+<script>
+const TARIFAS = {{ tarifas_json|safe }};
+const DEFAULT_PRECO = 50.0;
+
+const clienteSel   = document.getElementById('id_cliente');
+const leitAntInput = document.getElementById('id_leitura_anterior');
+const leitAtInput  = document.getElementById('id_leitura_atual');
+const previaDiv    = document.getElementById('previa-pagamento');
+const prevConsumo  = document.getElementById('prev-consumo');
+const prevValor    = document.getElementById('prev-valor-consumo');
+const prevTotal    = document.getElementById('prev-total');
+const prevAlerta   = document.getElementById('prev-alerta');
+
+function fmt(n) {
+    return n.toLocaleString('pt-AO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function calcular() {
+    const ant = parseFloat(leitAntInput.value);
+    const atu = parseFloat(leitAtInput.value);
+
+    if (isNaN(ant) || isNaN(atu)) {
+        previaDiv.classList.add('d-none');
+        return;
+    }
+
+    previaDiv.classList.remove('d-none');
+
+    const consumo = atu - ant;
+    if (consumo < 0) {
+        prevAlerta.classList.remove('d-none');
+        prevConsumo.textContent = '—';
+        prevValor.textContent   = '—';
+        prevTotal.textContent   = '—';
+        return;
+    }
+    prevAlerta.classList.add('d-none');
+
+    const clienteId = clienteSel ? clienteSel.value : '';
+    const tarifa    = TARIFAS[clienteId] || { preco_kwh: DEFAULT_PRECO, taxa: 0 };
+    const valorConsumo = consumo * tarifa.preco_kwh;
+    const total        = valorConsumo + tarifa.taxa;
+
+    prevConsumo.textContent = fmt(consumo) + ' kWh';
+    prevValor.textContent   = fmt(valorConsumo) + ' Kz';
+    prevTotal.textContent   = fmt(total) + ' Kz';
+}
+
+[leitAntInput, leitAtInput].forEach(el => el && el.addEventListener('input', calcular));
+clienteSel && clienteSel.addEventListener('change', calcular);
+</script>
 {% endblock %}

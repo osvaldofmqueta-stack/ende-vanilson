@@ -35,8 +35,8 @@
                     <td>{{ fatura.contador.numero_serie|default:"Não especificado" }}</td>
                     <td>{{ fatura.periodo_referencia }}</td>
                     <td>{{ fatura.consumo_kwh }}</td>
-                    <td>{{ fatura.valor_consumo }}</td>
-                    <td><strong>{{ fatura.valor_total }}</strong></td>
+                    <td>{{ fatura.valor_consumo|floatformat:2 }} Kz</td>
+                    <td><strong>{{ fatura.valor_total|floatformat:2 }} Kz</strong></td>
                     <td>
                         <span class="badge {% if fatura.status == 'PAGO' %}bg-success{% elif fatura.status == 'PENDENTE' %}bg-warning{% else %}bg-danger{% endif %}">
                             {{ fatura.get_status_display }}
