@@ -32,7 +32,9 @@ ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
     'https://*.replit.dev',
     'https://*.repl.co',
+    'https://*.janeway.replit.dev',
     'http://localhost:5000',
+    'http://0.0.0.0:5000',
 ]
 
 X_FRAME_OPTIONS = 'SAMEORIGIN'
