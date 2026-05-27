@@ -4,9 +4,9 @@ from clientes.models import Perfil
 
 
 UTILIZADORES = [
-    {'username': 'admin',     'password': 'admin@2025',     'email': 'admin@energia.ao',     'tipo': 'ADMIN',      'is_staff': True,  'is_superuser': True},
-    {'username': 'financeiro','password': 'fin@2025',       'email': 'fin@energia.ao',        'tipo': 'FINANCEIRO', 'is_staff': True,  'is_superuser': False},
-    {'username': 'operador',  'password': 'oper@2025',      'email': 'oper@energia.ao',       'tipo': 'OPERADOR',   'is_staff': False, 'is_superuser': False},
+    {'username': 'admin',      'password': 'admin@2025', 'email': 'admin@energia.ao',  'tipo': 'ADMIN',      'is_staff': True,  'is_superuser': True},
+    {'username': 'financeiro', 'password': 'fin@2025',   'email': 'fin@energia.ao',    'tipo': 'FINANCEIRO', 'is_staff': False, 'is_superuser': False},
+    {'username': 'operador',   'password': 'oper@2025',  'email': 'oper@energia.ao',   'tipo': 'OPERADOR',   'is_staff': False, 'is_superuser': False},
 ]
 
 

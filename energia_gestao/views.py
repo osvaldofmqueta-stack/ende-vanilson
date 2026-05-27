@@ -9,21 +9,8 @@ from django.utils import timezone
 
 @login_required
 def home(request):
-    if request.user.perfil.tipo_usuario == 'ADMIN':
-        return redirect('dashboard')
-    
-    hoje = timezone.now().date()
-    context = {
-        'total_clientes': Cliente.objects.count(),
-        'clientes_ativos': Cliente.objects.filter(status='ATIVO').count(),
-        'clientes_pre_pago': Cliente.objects.filter(tipo_cliente='PRE_PAGO').count(),
-        'clientes_pos_pago': Cliente.objects.filter(tipo_cliente='POS_PAGO').count(),
-        'total_contadores': Contador.objects.count(),
-        'contadores_ativos': Contador.objects.filter(status='ATIVO').count(),
-        'faturas_pendentes': Fatura.objects.filter(status='PENDENTE').count(),
-        'recargas_hoje': Recarga.objects.filter(data_recarga__date=hoje).count(),
-    }
-    return render(request, 'home.html', context)
+    # Todos os utilizadores autenticados são encaminhados directamente para o dashboard
+    return redirect('dashboard')
 
 @login_required
 def dashboard(request):
