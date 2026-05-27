@@ -3,17 +3,11 @@ from .models import Contador, HistoricoManutencao, CartaoRecarga
 
 @admin.register(Contador)
 class ContadorAdmin(admin.ModelAdmin):
-    list_display = ['numero_serie', 'tipo_contador', 'cliente', 'status', 'data_instalacao', 'leitura_atual']
-    list_filter = ['tipo_contador', 'status', 'data_instalacao']
+    list_display = ['numero_serie', 'cliente', 'status', 'data_instalacao', 'leitura_atual']
+    list_filter = ['status', 'data_instalacao']
     search_fields = ['numero_serie', 'cliente__nome', 'endereco_instalacao']
-    readonly_fields = ['data_criacao', 'tipo_contador']
+    readonly_fields = ['data_criacao']
     raw_id_fields = ['cliente']
-    
-    def get_readonly_fields(self, request, obj=None):
-        readonly = list(self.readonly_fields)
-        if obj and obj.cliente:
-            readonly.append('tipo_contador')
-        return readonly
 
 @admin.register(HistoricoManutencao)
 class HistoricoManutencaoAdmin(admin.ModelAdmin):

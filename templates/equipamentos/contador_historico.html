@@ -101,8 +101,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% if contador.tipo_contador == 'PRE_PAGO' %}
-                                {% for recarga in recargas %}
+                            {% for recarga in recargas %}
                                 <tr>
                                     <td>{{ recarga.data_recarga|date:"d/m/Y" }}</td>
                                     <td>Recarga</td>
@@ -110,20 +109,8 @@
                                     <td>{{ recarga.status }}</td>
                                 </tr>
                                 {% empty %}
-                                <tr><td colspan="4" class="text-center">Sem recargas.</td></tr>
-                                {% endfor %}
-                            {% else %}
-                                {% for fatura in faturas %}
-                                <tr>
-                                    <td>{{ fatura.data_emissao|date:"d/m/Y" }}</td>
-                                    <td>Fatura</td>
-                                    <td>{{ fatura.valor_total }} Kz</td>
-                                    <td>{{ fatura.status }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr><td colspan="4" class="text-center">Sem faturas.</td></tr>
-                                {% endfor %}
-                            {% endif %}
+                                <tr><td colspan="4" class="text-center">Sem recargas registadas.</td></tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
