@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Gestão de Contadores</h2>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'contador_create' %}" class="btn btn-primary">Registrar Novo Contador</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-10">
+                <input type="text" name="search" class="form-control" placeholder="Pesquisar por número de série..." value="{{ search_query }}">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary w-100">Pesquisar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nº Série</th>
+                        <th>Tipo/Fase</th>
+                        <th>Cliente</th>
+                        <th>Cartão</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contador in contadores %}
+                    <tr>
+                        <td>{{ contador.numero_serie }}</td>
+                        <td>{{ contador.get_tipo_contador_display }} / {{ contador.get_tipo_conexao_display }}</td>
+                        <td>{{ contador.cliente.nome|default:"Sem Cliente" }}</td>
+                        <td>{{ contador.numero_cartao|default:"-" }}</td>
+                        <td>
+                            <span class="badge {% if contador.status == 'ATIVO' %}bg-success{% elif contador.status == 'AVARIADO' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                {{ contador.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'contador_registrar_leitura' contador.pk %}" class="btn btn-sm btn-success">Leitura</a>
+                            <a href="{% url 'contador_historico' contador.pk %}" class="btn btn-sm btn-primary">Histórico</a>
+                            <a href="{% url 'contador_update' contador.pk %}" class="btn btn-sm btn-info">Editar</a>
+                            {% if contador.status != 'AVARIADO' %}
+                            <a href="{% url 'contador_marcar_avariado' contador.pk %}" class="btn btn-sm btn-danger">Avariado</a>
+                            {% endif %}
+                            <a href="{% url 'contador_toggle_status' contador.pk %}" class="btn btn-sm {% if contador.status == 'ATIVO' %}btn-warning{% else %}btn-success{% endif %}">
+                                {% if contador.status == 'ATIVO' %}Desativar{% else %}Ativar{% endif %}
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">Nenhum contador encontrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

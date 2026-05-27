@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestão de Energia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        :root {
+            --sidebar-width: 260px;
+            --primary-blue: #2c3e50;
+            --accent-blue: #3498db;
+            --hover-bg: #34495e;
+            --text-muted: #bdc3c7;
+            --bg-body: #f8f9fa;
+        }
+        
+        body { 
+            background-color: var(--bg-body); 
+            font-family: 'Inter', system-ui, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar Style */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            left: -260px;
+            top: 0;
+            background: var(--primary-blue);
+            color: white;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.is-authenticated {
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            text-align: center;
+        }
+
+        .sidebar-header h4 {
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin: 0;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            padding: 1.5rem 0;
+            list-style: none;
+            margin: 0;
+            height: calc(100vh - 100px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item-side {
+            margin: 0.2rem 1rem;
+        }
+
+        .nav-link-side {
+            color: var(--text-muted);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            transition: all 0.2s;
+            font-weight: 500;
+            gap: 12px;
+        }
+
+        .nav-link-side:hover {
+            color: white;
+            background: var(--hover-bg);
+            transform: translateX(5px);
+        }
+
+        .nav-link-side.active {
+            background: var(--accent-blue);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        /* Main Content Adjustment */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 0;
+            transition: all 0.3s;
+        }
+
+        .top-bar {
+            background: white;
+            padding: 1rem 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar { left: -260px !important; }
+            .sidebar.show { left: 0 !important; }
+            .main-content { margin-left: 0 !important; }
+        }
+
+        .logout-link {
+            color: #e74c3c !important;
+            margin-top: auto;
+            margin-bottom: 2rem;
+        }
+        .logout-link:hover {
+            background: rgba(231, 76, 60, 0.1) !important;
+        }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <aside class="sidebar is-authenticated" id="sidebar">
+        <div class="sidebar-header">
+            <a href="{% url 'dashboard' %}" style="text-decoration: none;">
+                <h4>⚡ ENERGIA</h4>
+            </a>
+        </div>
+        
+        <ul class="nav-menu">
+            <li class="nav-item-side">
+                <a href="{% url 'dashboard' %}" class="nav-link-side {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                    🏠 Dashboard
+                </a>
+            </li>
+            
+            {% if user.perfil.tipo_usuario != 'CLIENTE' %}
+                <li class="nav-item-side">
+                    <a href="{% url 'cliente_list' %}" class="nav-link-side {% if 'cliente' in request.path %}active{% endif %}">
+                        👤 Clientes
+                    </a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'contador_list' %}" class="nav-link-side {% if 'contador' in request.path %}active{% endif %}">
+                        📟 Contadores
+                    </a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'fatura_list' %}" class="nav-link-side {% if 'fatura' in request.path %}active{% endif %}">
+                        📄 Faturas
+                    </a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'controlo_divida' %}" class="nav-link-side {% if 'divida' in request.path %}active{% endif %}">
+                        💳 Dívidas
+                    </a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'tarifa_list' %}" class="nav-link-side {% if 'tarifa' in request.path %}active{% endif %}">
+                        📋 Planos
+                    </a>
+                </li>
+                
+                {% if user.is_staff or user.perfil.tipo_usuario == 'ADMIN' or user.perfil.tipo_usuario == 'FINANCEIRO' %}
+                    <li class="nav-item-side mt-3 mb-1">
+                        <small class="text-uppercase px-3 fw-bold" style="font-size: 0.7rem; color: rgba(255,255,255,0.3);">Relatórios</small>
+                    </li>
+                    <li class="nav-item-side">
+                        <a href="{% url 'relatorio_list' %}" class="nav-link-side {% if 'relatorio' in request.path %}active{% endif %}">
+                            📊 Gestão
+                        </a>
+                    </li>
+                    <li class="nav-item-side">
+                        <a href="{% url 'estatisticas_gerais' %}" class="nav-link-side {% if 'estatisticas' in request.path %}active{% endif %}">
+                            📈 Estatísticas
+                        </a>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="nav-item-side">
+                    <a href="{% url 'fatura_list' %}" class="nav-link-side">📄 Minhas Faturas</a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'contador_list' %}" class="nav-link-side">📟 Meus Contadores</a>
+                </li>
+            {% endif %}
+
+            <li class="nav-item-side logout-link">
+                <button type="button" class="nav-link-side border-0 bg-transparent w-100 text-start" style="color: inherit;" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    🚪 Sair
+                </button>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-danger text-white border-0">
+                    <h5 class="modal-title" id="logoutModalLabel">Confirmar Saída</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <div class="mb-3">
+                        <span style="font-size: 3rem;">👋</span>
+                    </div>
+                    <h5>Tem certeza que deseja sair do sistema?</h5>
+                    <p class="text-muted">Você precisará fazer login novamente para acessar suas informações.</p>
+                </div>
+                <div class="modal-footer border-0 d-flex justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                    <form action="{% url 'logout' %}" method="post" class="m-0">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger px-4 rounded-pill">Sair Agora</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <main class="{% if user.is_authenticated %}main-content{% endif %}">
+        {% if user.is_authenticated %}
+        <div class="top-bar">
+            <div class="d-flex align-items-center">
+                <button class="btn d-lg-none me-2" id="sidebarToggle">☰</button>
+                <div class="d-flex flex-column">
+                    <h5 class="mb-0 fw-bold">Olá, {{ user.username }}</h5>
+                    <small class="text-muted" id="realTimeClock"></small>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'perfil_edit' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-2 d-flex align-items-center justify-content-center" title="Editar Perfil">
+                    <span style="font-size: 1.2rem;">⚙️</span>
+                </a>
+                <a href="/admin/" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Configurações</a>
+                <span class="badge bg-primary rounded-pill d-flex align-items-center px-3">{{ user.perfil.get_tipo_usuario_display }}</span>
+            </div>
+        </div>
+        {% endif %}
+        
+        <div class="{% if user.is_authenticated %}container-fluid px-4{% else %}container-fluid p-0{% endif %}">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% if user.is_authenticated %}
+    <script>
+        document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('show');
+        });
+
+        function updateClock() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const clockElement = document.getElementById('realTimeClock');
+            if (clockElement) {
+                clockElement.textContent = now.toLocaleDateString('pt-PT', options);
+            }
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center" style="min-height: 100vh; width: 100vw; position: fixed; top: 0; left: 0; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="col-md-5 col-lg-4 px-3">
+        <div class="card border-0 shadow-lg animate__animated animate__fadeIn">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <div class="display-1 text-primary mb-2">⚡</div>
+                    <h2 class="fw-bold">Bem-vindo</h2>
+                    <p class="text-muted">Acesse o Sistema de Gestão de Energia</p>
+                </div>
+
+                <form method="post" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    {% if form.errors or form.non_field_errors %}
+                        <div class="alert alert-danger py-2 mb-4 animate__animated animate__shakeX">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Usuário ou senha incorretos.
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold">Usuário</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text bg-light border-end-0">👤</span>
+                            <input type="text" name="username" class="form-control bg-light border-start-0 {% if form.username.errors %}is-invalid{% endif %}" id="{{ form.username.id_for_label }}" placeholder="Seu usuário" required>
+                            <div class="invalid-feedback">O nome de usuário é obrigatório.</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold">Senha</label>
+                        <div class="input-group has-validation">
+                            <span class="input-group-text bg-light border-end-0">🔒</span>
+                            <input type="password" name="password" class="form-control bg-light border-start-0 {% if form.password.errors %}is-invalid{% endif %}" id="{{ form.password.id_for_label }}" placeholder="Sua senha" required>
+                            <div class="invalid-feedback">A senha é obrigatória.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2" id="loginBtn">
+                            <span class="spinner-border spinner-border-sm d-none" id="loginSpinner" role="status" aria-hidden="true"></span>
+                            <span id="loginText">Entrar no Sistema</span>
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <small class="text-muted">© 2025 Gestão de Energia - Angola</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    body { overflow: hidden; }
+    .card {
+        transition: transform 0.3s ease;
+        border-radius: 20px !important;
+    }
+    .btn-primary {
+        background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+        border: none;
+        padding: 12px;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(45deg, #0b5ed7, #0bacbe);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.4);
+    }
+    .input-group-text { border-right: none; }
+</style>
+
+<script>
+    (function () {
+      'use strict'
+      var forms = document.querySelectorAll('.needs-validation')
+      var loginBtn = document.getElementById('loginBtn')
+      var loginSpinner = document.getElementById('loginSpinner')
+      var loginText = document.getElementById('loginText')
+
+      Array.prototype.slice.call(forms).forEach(function (form) {
+          form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+              event.preventDefault()
+              event.stopPropagation()
+            } else {
+              // Se for válido, mostrar loading
+              loginBtn.disabled = true
+              loginSpinner.classList.remove('d-none')
+              loginText.textContent = 'Autenticando...'
+            }
+            form.classList.add('was-validated')
+          }, false)
+      })
+    })()
+</script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white p-4">
+                <h3 class="mb-0">Registrar Pagamento - Fatura {{ fatura.numero_fatura }}</h3>
+            </div>
+            <div class="card-body p-5">
+                <div class="alert alert-info" role="alert">
+                    <strong>Valor a Pagar:</strong> {{ fatura.valor_total }} Kz
+                </div>
+
+                <form method="post" class="needs-validation">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.valor_pago.id_for_label }}" class="form-label">Valor Pago (Kz) <span class="text-danger">*</span></label>
+                        {{ form.valor_pago }}
+                        {% if form.valor_pago.errors %}
+                            <div class="text-danger mt-2">{{ form.valor_pago.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.metodo_pagamento.id_for_label }}" class="form-label">Método de Pagamento <span class="text-danger">*</span></label>
+                        {{ form.metodo_pagamento }}
+                        {% if form.metodo_pagamento.errors %}
+                            <div class="text-danger mt-2">{{ form.metodo_pagamento.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3" id="multicaixa-field">
+                        <label for="{{ form.referencia_multicaixa.id_for_label }}" class="form-label">Referência Multicaixa</label>
+                        {{ form.referencia_multicaixa }}
+                        <small class="form-text text-muted">Informar apenas se o pagamento foi via Multicaixa</small>
+                        {% if form.referencia_multicaixa.errors %}
+                            <div class="text-danger mt-2">{{ form.referencia_multicaixa.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.observacoes.id_for_label }}" class="form-label">Observações</label>
+                        {{ form.observacoes }}
+                        {% if form.observacoes.errors %}
+                            <div class="text-danger mt-2">{{ form.observacoes.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary btn-lg">Registrar Pagamento</button>
+                        <a href="{% url 'fatura_detail' fatura.pk %}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const metodoSelect = document.querySelector('[name="metodo_pagamento"]');
+    const multicaixaField = document.getElementById('multicaixa-field');
+    
+    function toggleMulticaixa() {
+        if (metodoSelect.value === 'MULTICAIXA') {
+            multicaixaField.style.display = 'block';
+        } else {
+            multicaixaField.style.display = 'none';
+        }
+    }
+    
+    metodoSelect.addEventListener('change', toggleMulticaixa);
+    toggleMulticaixa();
+});
+</script>
+{% endblock %}

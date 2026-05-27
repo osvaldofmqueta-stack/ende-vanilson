@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-4">Controlo de Dívida</h2>
+        </div>
+    </div>
+
+    <!-- Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Total de Dívida</h6>
+                    <h3 class="card-text">{{ total_divida }} Kz</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h6 class="card-title">Clientes Devendo</h6>
+                    <h3 class="card-text">{{ total_clientes_devendo }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Faturas Pendentes</h6>
+                    <h3 class="card-text">{{ total_faturas_pendentes }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Média por Cliente</h6>
+                    <h3 class="card-text">{% if total_clientes_devendo %}{{ total_divida|add:"0"|slice:":-3" }}{% else %}0{% endif %} Kz</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-dark text-white">
+                <div class="card-body">
+                    <h6 class="card-title">Contadores Suspensos</h6>
+                    <h3 class="card-text">{{ contadores_suspensos }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Faturas Vencidas -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Faturas Vencidas (Ação Imediata)</h5>
+                </div>
+                <div class="card-body">
+                    {% if faturas_vencidas %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead class="table-danger">
+                                <tr>
+                                    <th>Fatura</th>
+                                    <th>Cliente</th>
+                                    <th>Valor Base</th>
+                                    <th>Multas/Juros</th>
+                                    <th>Total</th>
+                                    <th>Data Vencimento</th>
+                                    <th>Dias em Atraso</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for fatura in faturas_vencidas %}
+                                <tr class="table-danger">
+                                    <td><strong>{{ fatura.numero_fatura }}</strong></td>
+                                    <td>{{ fatura.cliente.nome }}</td>
+                                    <td>{{ fatura.valor_consumo }} Kz</td>
+                                    <td>
+                                        <span class="text-danger">+{{ fatura.multa_atraso|add:fatura.juros_mora }} Kz</span>
+                                    </td>
+                                    <td><span class="badge bg-danger">{{ fatura.valor_total }} Kz</span></td>
+                                    <td>{{ fatura.data_vencimento|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <span class="badge bg-danger">
+                                            {% now "Y-m-d" as today %}
+                                            {{ fatura.data_vencimento|add:"-today"|add:"+0" }} dias
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'fatura_detail' fatura.pk %}" class="btn btn-sm btn-danger">Ver Fatura</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success" role="alert">
+                        ✅ Sem faturas vencidas! Excelente!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabela de Clientes com Dívida -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Clientes com Dívida Ativa</h5>
+                    <a href="{% url 'acionar_suspensao_automatica' %}" class="btn btn-warning btn-sm" onclick="return confirm('Deseja realmente processar a suspensão automática para todos os devedores com mais de 30 dias de atraso?')">
+                        <i class="fas fa-bolt"></i> Executar Suspensão Automática
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if clientes_divida %}
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>NIF</th>
+                                    <th>Total Dívida</th>
+                                    <th>Faturas Vencidas</th>
+                                    <th>Faturas Pendentes</th>
+                                    <th>Dias em Atraso</th>
+                                    <th>Status do Contador</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cliente, dados in clientes_divida %}
+                                <tr>
+                                    <td><strong>{{ cliente.nome }}</strong></td>
+                                    <td>{{ cliente.nif }}</td>
+                                    <td>
+                                        <span class="badge bg-danger" style="font-size: 14px;">{{ dados.total_divida }} Kz</span>
+                                    </td>
+                                    <td>
+                                        {% if dados.faturas_vencidas > 0 %}
+                                        <span class="badge bg-danger">{{ dados.faturas_vencidas }}</span>
+                                        {% else %}
+                                        <span class="badge bg-success">{{ dados.faturas_vencidas }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-warning">{{ dados.faturas_pendentes }}</span>
+                                    </td>
+                                    <td>
+                                        {% if dados.dias_vencimento > 0 %}
+                                        <span class="badge bg-danger">{{ dados.dias_vencimento }} dias</span>
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if cliente.contador %}
+                                            {% if cliente.contador.status == 'SUSPENSO' %}
+                                            <span class="badge bg-dark">🚫 SUSPENSO</span>
+                                            <br><small class="text-muted">{{ cliente.contador.data_suspensao|date:"d/m/Y H:i" }}</small>
+                                            {% else %}
+                                            <span class="badge bg-success">✅ {{ cliente.contador.get_status_display }}</span>
+                                            {% endif %}
+                                        {% else %}
+                                        <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'cliente_list' %}?q={{ cliente.nome }}" class="btn btn-sm btn-primary">Ver</a>
+                                            {% if cliente.contador and cliente.contador.status != 'SUSPENSO' and dados.faturas_vencidas > 0 %}
+                                            <a href="{% url 'suspender_contador' cliente.contador.pk %}" class="btn btn-sm btn-danger" onclick="return confirm('Suspender o contador de {{ cliente.nome }}?')">Suspender</a>
+                                            {% elif cliente.contador and cliente.contador.status == 'SUSPENSO' %}
+                                            <a href="{% url 'reativar_contador' cliente.contador.pk %}" class="btn btn-sm btn-success" onclick="return confirm('Reativar o contador de {{ cliente.nome }}?')">Reativar</a>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% for fatura in dados.faturas %}
+                                <tr class="table-light">
+                                    <td colspan="7" style="padding-left: 40px;">
+                                        <small>
+                                            <strong>Fatura:</strong> {{ fatura.numero_fatura }} | 
+                                            <strong>Vencimento:</strong> {{ fatura.data_vencimento|date:"d/m/Y" }} | 
+                                            <strong>Valor:</strong> {{ fatura.valor_total }} Kz | 
+                                            <strong>Status:</strong> 
+                                            <span class="badge {% if fatura.status == 'VENCIDO' %}bg-danger{% else %}bg-warning{% endif %}">
+                                                {{ fatura.get_status_display }}
+                                            </span>
+                                            <a href="{% url 'fatura_detail' fatura.pk %}" class="btn btn-xs btn-outline-primary ms-2" style="padding: 2px 8px; font-size: 12px;">Ver</a>
+                                        </small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success" role="alert">
+                        <i class="bi bi-check-circle"></i> Nenhum cliente com dívida! Parabéns!
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.table-light tr {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

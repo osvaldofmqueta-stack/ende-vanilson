@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h2>Histórico do Contador: {{ contador.numero_serie }}</h2>
+        <p class="text-white">Cliente: {{ contador.cliente.nome|default:"Sem Cliente" }}</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'contador_list' %}" class="btn btn-secondary">Voltar para Lista</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Histórico de Consumo (Leituras)</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Leitura Anterior</th>
+                                <th>Leitura Atual</th>
+                                <th>Consumo (kWh)</th>
+                                <th>Operador</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for leitura in leituras %}
+                            <tr>
+                                <td>{{ leitura.data_leitura|date:"d/m/Y H:i" }}</td>
+                                <td>{{ leitura.leitura_anterior }} kWh</td>
+                                <td>{{ leitura.leitura_atual }} kWh</td>
+                                <td><span class="badge bg-info">{{ leitura.consumo }} kWh</span></td>
+                                <td>{{ leitura.operador.username|default:"Sistema" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center">Sem registros de consumo.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Histórico de Manutenção</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Técnico</th>
+                                <th>Custo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in historico %}
+                            <tr>
+                                <td>{{ item.data_manutencao|date:"d/m/Y" }}</td>
+                                <td>{{ item.tipo_manutencao }}</td>
+                                <td>{{ item.tecnico_responsavel }}</td>
+                                <td>{{ item.custo }} Kz</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="4" class="text-center">Sem registros de manutenção.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Últimas Recargas / Faturas</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if contador.tipo_contador == 'PRE_PAGO' %}
+                                {% for recarga in recargas %}
+                                <tr>
+                                    <td>{{ recarga.data_recarga|date:"d/m/Y" }}</td>
+                                    <td>Recarga</td>
+                                    <td>{{ recarga.valor }} Kz</td>
+                                    <td>{{ recarga.status }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center">Sem recargas.</td></tr>
+                                {% endfor %}
+                            {% else %}
+                                {% for fatura in faturas %}
+                                <tr>
+                                    <td>{{ fatura.data_emissao|date:"d/m/Y" }}</td>
+                                    <td>Fatura</td>
+                                    <td>{{ fatura.valor_total }} Kz</td>
+                                    <td>{{ fatura.status }}</td>
+                                </tr>
+                                {% empty %}
+                                <tr><td colspan="4" class="text-center">Sem faturas.</td></tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

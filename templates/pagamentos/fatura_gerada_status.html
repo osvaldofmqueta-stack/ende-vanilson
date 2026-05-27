@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <div class="card shadow p-5">
+            <div class="mb-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+            </div>
+            <h2 class="mb-3">Processamento Concluído!</h2>
+            <p class="lead mb-4">Foram geradas <strong>{{ total }}</strong> faturas automáticas para o período de <strong>{{ periodo }}</strong>.</p>
+            <div class="d-grid gap-2">
+                <a href="{% url 'fatura_list' %}" class="btn btn-primary btn-lg">Ver Todas as Faturas</a>
+                <a href="{% url 'home' %}" class="btn btn-outline-secondary">Voltar ao Início</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

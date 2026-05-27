@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    :root {
+        --primary-gradient: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+        --blue-gradient: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        --green-gradient: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+        --orange-gradient: linear-gradient(135deg, #fd7e14 0%, #d35400 100%);
+        --cyan-gradient: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+        --dark-gradient: linear-gradient(135deg, #343a40 0%, #212529 100%);
+    }
+
+    .card-stat {
+        border: none;
+        border-radius: 15px;
+        color: white;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card-stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-stat .card-body {
+        padding: 1.5rem;
+        z-index: 1;
+        position: relative;
+    }
+
+    .card-stat .icon-bg {
+        position: absolute;
+        right: -10px;
+        bottom: -10px;
+        font-size: 5rem;
+        opacity: 0.15;
+        transform: rotate(-15deg);
+    }
+
+    .bg-gradient-blue { background: var(--blue-gradient); }
+    .bg-gradient-green { background: var(--green-gradient); }
+    .bg-gradient-orange { background: var(--orange-gradient); }
+    .bg-gradient-cyan { background: var(--cyan-gradient); }
+    .bg-gradient-dark { background: var(--dark-gradient); }
+
+    .table-card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .table-card .card-header {
+        background-color: transparent;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        padding: 1.2rem 1.5rem;
+    }
+
+    .badge-soft-success {
+        background-color: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .badge-soft-warning {
+        background-color: #fff3cd;
+        color: #664d03;
+    }
+
+    .summary-item {
+        transition: background-color 0.2s;
+    }
+
+    .summary-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<div class="row g-3 mb-4 mt-2">
+    <div class="col-md-3">
+        <div class="card card-stat bg-gradient-blue">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold mb-3">Total Clientes</h6>
+                <h2 class="mb-0 fw-bold">{{ total_clientes }}</h2>
+                <div class="icon-bg">👥</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-gradient-green">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold mb-3">Clientes Ativos</h6>
+                <h2 class="mb-0 fw-bold">{{ clientes_ativos }}</h2>
+                <div class="icon-bg">✅</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-gradient-orange">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold mb-3">Dívidas Pendentes</h6>
+                <h2 class="mb-0 fw-bold">{{ total_divida_pendente|floatformat:2 }} Kz</h2>
+                <div class="icon-bg">💰</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card card-stat bg-gradient-cyan">
+            <div class="card-body">
+                <h6 class="text-uppercase small fw-bold mb-3">Consumo do Mês</h6>
+                <h2 class="mb-0 fw-bold">{{ consumo_mes_atual }} kWh</h2>
+                <div class="icon-bg">⚡</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card table-card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">Últimos Clientes</h5>
+                <a href="{% url 'cliente_list' %}" class="btn btn-sm btn-primary rounded-pill px-3">Ver Todos</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Nº Cliente</th>
+                                <th>Nome</th>
+                                <th>Tipo</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cliente in ultimos_clientes %}
+                            <tr>
+                                <td class="ps-4 fw-semibold text-primary">{{ cliente.numero_cliente }}</td>
+                                <td>{{ cliente.nome }}</td>
+                                <td>{{ cliente.get_tipo_cliente_display }}</td>
+                                <td><span class="badge badge-soft-success rounded-pill px-3">{{ cliente.status }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4">Nenhum cliente cadastrado</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card table-card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-dark">Últimas Faturas</h5>
+                <a href="{% url 'fatura_list' %}" class="btn btn-sm btn-primary rounded-pill px-3">Ver Todas</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Nº Fatura</th>
+                                <th>Cliente</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for fatura in ultimas_faturas %}
+                            <tr>
+                                <td class="ps-4 fw-semibold text-primary">{{ fatura.numero_fatura }}</td>
+                                <td>{{ fatura.cliente.nome }}</td>
+                                <td class="fw-bold">{{ fatura.valor_total }} Kz</td>
+                                <td><span class="badge badge-soft-warning rounded-pill px-3">{{ fatura.status }}</span></td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-4">Nenhuma fatura emitida</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card table-card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0 fw-bold text-dark">Resumo de Atividade</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="summary-item p-4 border-0 bg-light rounded-4 text-center">
+                            <div class="fs-1 mb-2">🚫</div>
+                            <h6 class="text-muted text-uppercase small mb-2">Clientes Inativos</h6>
+                            <h3 class="fw-bold text-danger mb-0">{{ clientes_inativos }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-item p-4 border-0 bg-light rounded-4 text-center">
+                            <div class="fs-1 mb-2">🧾</div>
+                            <h6 class="text-muted text-uppercase small mb-2">Faturas Pagas</h6>
+                            <h3 class="fw-bold text-success mb-0">{{ faturas_pagas }}</h3>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="summary-item p-4 border-0 bg-light rounded-4 text-center">
+                            <div class="fs-1 mb-2">💳</div>
+                            <h6 class="text-muted text-uppercase small mb-2">Total de Recargas</h6>
+                            <h3 class="fw-bold text-info mb-0">{{ total_recargas }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

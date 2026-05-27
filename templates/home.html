@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center text-white">
+        <h1 class="display-4 mb-3">Sistema de Gestão de Energia</h1>
+        <p class="lead">Gestão completa de clientes, contadores e pagamentos</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h3 class="text-primary">{{ total_clientes }}</h3>
+                <p class="text-muted mb-0">Total Clientes</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h3 class="text-success">{{ clientes_ativos }}</h3>
+                <p class="text-muted mb-0">Clientes Ativos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h3 class="text-info">{{ total_contadores }}</h3>
+                <p class="text-muted mb-0">Contadores</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-center">
+            <div class="card-body">
+                <h3 class="text-warning">{{ faturas_pendentes }}</h3>
+                <p class="text-muted mb-0">Faturas Pendentes</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Tipos de Cliente</h5>
+                <div class="d-flex justify-content-around mt-3">
+                    <div class="text-center">
+                        <h4 class="text-primary">{{ clientes_pre_pago }}</h4>
+                        <small class="text-muted">Pré-pago</small>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-success">{{ clientes_pos_pago }}</h4>
+                        <small class="text-muted">Pós-pago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Status dos Contadores</h5>
+                <div class="d-flex justify-content-around mt-3">
+                    <div class="text-center">
+                        <h4 class="text-success">{{ contadores_ativos }}</h4>
+                        <small class="text-muted">Ativos</small>
+                    </div>
+                    <div class="text-center">
+                        <h4 class="text-info">{{ recargas_hoje }}</h4>
+                        <small class="text-muted">Recargas Hoje</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 text-center">
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <h5 class="card-title">Acesso Rápido</h5>
+                <div class="mt-3">
+                    <a href="{% url 'cliente_list' %}" class="btn btn-light btn-sm m-1">Clientes</a>
+                    <a href="{% url 'contador_list' %}" class="btn btn-light btn-sm m-1">Contadores</a>
+                    <a href="/admin/pagamentos/fatura/" class="btn btn-light btn-sm m-1">Faturas</a>
+                    <a href="/admin/pagamentos/recarga/" class="btn btn-light btn-sm m-1">Recargas</a>
+                    <a href="/admin/pagamentos/recibo/" class="btn btn-light btn-sm m-1">Recibos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

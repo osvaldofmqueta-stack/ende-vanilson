@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card shadow p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Relatórios Gerados</h2>
+        <a href="{% url 'gerar_relatorio' %}" class="btn btn-primary">Gerar Novo Relatório</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Período</th>
+                    <th>Gerado por</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in relatorios %}
+                <tr>
+                    <td>{{ r.data_geracao|date:"d/m/Y H:i" }}</td>
+                    <td>{{ r.titulo }}</td>
+                    <td>{{ r.get_tipo_relatorio_display }}</td>
+                    <td>{{ r.periodo_inicio|date:"d/m/Y" }} - {{ r.periodo_fim|date:"d/m/Y" }}</td>
+                    <td>{{ r.gerado_por }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{% url 'exportar_relatorio_pdf' r.pk %}" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-file-pdf"></i> PDF
+                            </a>
+                            <a href="{% url 'exportar_relatorio_excel' r.pk %}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-file-excel"></i> Excel
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Nenhum relatório gerado ainda.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

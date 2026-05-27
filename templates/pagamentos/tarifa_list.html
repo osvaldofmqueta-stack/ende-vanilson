@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <div>
+            <h2 class="text-white">Planos e Tarifas de Energia</h2>
+            <p class="text-white">Gerencie os preços e planos aplicáveis aos clientes.</p>
+        </div>
+        <a href="{% url 'tarifa_create' %}" class="btn btn-success">Novo Plano</a>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for tarifa in tarifas %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">{{ tarifa.nome }}</h5>
+                <span class="badge {% if tarifa.ativa %}bg-success{% else %}bg-secondary{% endif %}">
+                    {% if tarifa.ativa %}Ativo{% else %}Inativo{% endif %}
+                </span>
+            </div>
+            <div class="card-body">
+                <h3 class="text-center mb-3">{{ tarifa.preco_kwh }} <small>Kz/kWh</small></h3>
+                <div class="text-center small mb-3">
+                    <p class="mb-1 text-muted">Pós-pago: <strong>{{ tarifa.preco_cliente_pos }} Kz</strong></p>
+                    <p class="mb-1 text-muted">Pré-pago: <strong>{{ tarifa.preco_cliente_pre }} Kz</strong></p>
+                </div>
+                {% if tarifa.taxa_fixa > 0 %}
+                <p class="text-muted text-center">Taxa Fixa Mensal: <strong>{{ tarifa.taxa_fixa }} Kz</strong></p>
+                {% endif %}
+                <hr>
+                <p class="card-text">{{ tarifa.descricao|default:"Sem descrição disponível." }}</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pb-3">
+                <a href="{% url 'tarifa_update' tarifa.pk %}" class="btn btn-outline-primary w-100">Editar Plano</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <h4>Nenhum plano cadastrado.</h4>
+                <p>Crie planos de tarifas para começar.</p>
+                <a href="{% url 'tarifa_create' %}" class="btn btn-primary mt-3">Criar Primeira Tarifa</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

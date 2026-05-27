@@ -1,0 +1,232 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h2 class="mb-4 text-white">📊 Estatísticas e Consumo Mensal</h2>
+        </div>
+    </div>
+
+    <!-- Cards de Resumo -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white text-center p-3">
+                <h5>Total Clientes</h5>
+                <h3>{{ total_clientes }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center p-3">
+                <h5>Total Recebido</h5>
+                <h3>{{ total_recebido }} Kz</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center p-3">
+                <h5>Total Faturado</h5>
+                <h3>{{ total_faturado }} Kz</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white text-center p-3">
+                <h5>Faturas Vencidas</h5>
+                <h3>{{ faturas_vencidas }}</h3>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white text-center p-3">
+                <h5>Contadores Ativos</h5>
+                <h3>{{ contadores_ativos }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabelas de Receita e Consumo -->
+    <div class="row">
+        <!-- Receita Mensal -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Receita Mensal</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mês</th>
+                                    <th>Recebido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in receita_mensal %}
+                                <tr>
+                                    <td>{{ item.mes|date:"M Y" }}</td>
+                                    <td>{{ item.total_recebido }} Kz</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receita Diária -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Receita Diária (15 dias)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Dia</th>
+                                    <th>Recebido</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in receita_diaria %}
+                                <tr>
+                                    <td>{{ item.dia|date:"d/m/Y" }}</td>
+                                    <td>{{ item.total_recebido }} Kz</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consumo Mensal -->
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Consumo Mensal</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mês</th>
+                                    <th>kWh</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in consumo_mensal %}
+                                <tr>
+                                    <td>{{ item.mes|date:"M Y" }}</td>
+                                    <td>{{ item.total_kwh }} kWh</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pagamentos por Período -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Consulta de Pagamentos por Período</h5>
+                    {% if filtros.inicio and filtros.fim %}
+                    <span class="badge bg-light text-dark">Total no Período: {{ total_periodo }} Kz</span>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <form method="get" class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Data Início</label>
+                            <input type="date" name="data_inicio" class="form-control" value="{{ filtros.inicio }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Data Fim</label>
+                            <input type="date" name="data_fim" class="form-control" value="{{ filtros.fim }}">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Filtrar Pagamentos</button>
+                        </div>
+                    </form>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover table-sm">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Fatura</th>
+                                    <th>Método</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for p in pagamentos_periodo %}
+                                <tr>
+                                    <td>{{ p.data_pagamento|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ p.fatura.cliente.nome }}</td>
+                                    <td>{{ p.fatura.numero_fatura }}</td>
+                                    <td>{{ p.get_metodo_pagamento_display }}</td>
+                                    <td><strong>{{ p.valor_pago }} Kz</strong></td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">Nenhum pagamento encontrado para este período ou selecione as datas acima.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Clientes Devedores -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">Top 10 Clientes Devedores (Ação Necessária)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>NIF</th>
+                                    <th>Nº Faturas</th>
+                                    <th>Total em Dívida</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for devedor in clientes_devedores %}
+                                <tr>
+                                    <td><strong>{{ devedor.cliente__nome }}</strong></td>
+                                    <td>{{ devedor.cliente__nif }}</td>
+                                    <td><span class="badge bg-warning text-dark">{{ devedor.faturas_count }}</span></td>
+                                    <td><span class="text-danger font-weight-bold">{{ devedor.total_divida }} Kz</span></td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center text-success">Nenhum cliente com dívida ativa. Ótimo trabalho!</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

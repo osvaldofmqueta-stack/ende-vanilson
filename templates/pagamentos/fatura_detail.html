@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow border-0">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-4">
+                <h3 class="mb-0">Fatura: {{ fatura.numero_fatura }}</h3>
+                <img src="{% static 'images/logo_iscat.png' %}" alt="Logo ISCAT" style="max-height: 70px;">
+                <span class="badge {% if fatura.status == 'PAGO' %}bg-success{% elif fatura.status == 'PENDENTE' %}bg-warning{% else %}bg-danger{% endif %} fs-5">
+                    {{ fatura.get_status_display }}
+                </span>
+            </div>
+            <div class="card-body p-5">
+                <div class="row mb-5">
+                    <div class="col-sm-6">
+                        <h6 class="text-muted text-uppercase mb-3">Cliente</h6>
+                        <h4 class="mb-1">{{ fatura.cliente.nome }}</h4>
+                        <p class="text-muted mb-0">{{ fatura.cliente.morada|default:"Morada não especificada" }}</p>
+                        <p class="text-muted mb-0">NIF: {{ fatura.cliente.nif }}</p>
+                    </div>
+                    <div class="col-sm-6 text-sm-end">
+                        <h6 class="text-muted text-uppercase mb-3">Detalhes da Emissão</h6>
+                        <p class="mb-1"><strong>Emissão:</strong> {{ fatura.data_emissao|date:"d/m/Y" }}</p>
+                        <p class="mb-1"><strong>Vencimento:</strong> {{ fatura.data_vencimento|date:"d/m/Y" }}</p>
+                        <p class="mb-1"><strong>Período:</strong> {{ fatura.periodo_referencia }}</p>
+                        <p class="mb-1"><strong>Contador:</strong> {{ fatura.contador.numero_serie|default:"Não especificado" }}</p>
+                        <p class="mb-1"><strong>Consumo do Mês:</strong> {{ fatura.consumo_kwh }} kWh</p>
+                        <p class="mb-1"><strong>Valor do Consumo:</strong> {{ fatura.valor_consumo }} Kz</p>
+                        <p class="mb-0"><strong>Estado:</strong> <span class="badge {% if fatura.status == 'PAGO' %}bg-success{% elif fatura.status == 'PENDENTE' %}bg-warning{% else %}bg-danger{% endif %}">{{ fatura.get_status_display }}</span></p>
+                    </div>
+                </div>
+
+                <div class="table-responsive mb-5">
+                    <table class="table table-bordered">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Descrição</th>
+                                <th class="text-center">Leitura Anterior</th>
+                                <th class="text-center">Leitura Atual</th>
+                                <th class="text-end">Consumo (kWh)</th>
+                                <th class="text-end">Total (Kz)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Consumo de Energia Elétrica</td>
+                                <td class="text-center">{{ fatura.leitura_anterior }}</td>
+                                <td class="text-center">{{ fatura.leitura_atual }}</td>
+                                <td class="text-end">{{ fatura.consumo_kwh }}</td>
+                                <td class="text-end">{{ fatura.valor_consumo }}</td>
+                            </tr>
+                            {% if fatura.outras_taxas > 0 %}
+                            <tr>
+                                <td colspan="4" class="text-end">Taxas Adicionais ({{ fatura.cliente.get_tipo_display }})</td>
+                                <td class="text-end">{{ fatura.outras_taxas }}</td>
+                            </tr>
+                            {% endif %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-active">
+                                <th colspan="4" class="text-end text-uppercase">Total a Pagar</th>
+                                <th class="text-end fs-4">{{ fatura.valor_total }} Kz</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                {% if pagamentos %}
+                <div class="mt-5 pt-5 border-top">
+                    <h5 class="mb-3">Histórico de Pagamentos</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Valor</th>
+                                    <th>Método</th>
+                                    <th>Referência</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for pagamento in pagamentos %}
+                                <tr>
+                                    <td>{{ pagamento.data_pagamento|date:"d/m/Y H:i" }}</td>
+                                    <td>{{ pagamento.valor_pago }} Kz</td>
+                                    <td><span class="badge bg-info">{{ pagamento.get_metodo_pagamento_display }}</span></td>
+                                    <td>{{ pagamento.referencia_multicaixa|default:"-" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-12 text-center mt-4">
+                        <button class="btn btn-primary btn-lg me-2" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir</button>
+                        <a href="{% url 'fatura_pdf' fatura.pk %}" class="btn btn-danger btn-lg me-2"><i class="bi bi-file-earmark-pdf"></i> Exportar PDF</a>
+                        {% if fatura.status != 'PAGO' %}
+                        <a href="{% url 'registrar_pagamento' fatura.pk %}" class="btn btn-success btn-lg me-2"><i class="bi bi-check-circle"></i> Registrar Pagamento</a>
+                        {% endif %}
+                        <a href="{% url 'fatura_list' %}" class="btn btn-outline-secondary btn-lg">Voltar à Lista</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

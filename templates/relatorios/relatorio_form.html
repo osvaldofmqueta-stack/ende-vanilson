@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card shadow p-4" style="max-width: 600px; margin: auto;">
+    <h2 class="mb-4 text-center">Gerar Relatório</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Tipo de Relatório</label>
+            <select name="tipo_relatorio" class="form-select" required>
+                {% for valor, rotulo in tipos %}
+                <option value="{{ valor }}">{{ rotulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Data Início</label>
+            <input type="date" name="periodo_inicio" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Data Fim</label>
+            <input type="date" name="periodo_fim" class="form-control" required>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Gerar Relatório</button>
+            <a href="{% url 'relatorio_list' %}" class="btn btn-outline-secondary mt-2">Cancelar</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
