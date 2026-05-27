@@ -1,0 +1,26 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "wGUaOmswi4bAXc58sUiAC"
+uri = "file://static/diagrams/1_diagrama_ER.png"
+type = "image"
+title = "Diagrama de Entidade-Relacionamento (DER)"
+
+[[outputs]]
+id = "k_YbNS_-Cozho2ZKvXJTs"
+uri = "file://static/diagrams/2_diagrama_classes.png"
+type = "image"
+title = "Diagrama de Classes (UML)"
+
+[[outputs]]
+id = "pL1q0rUKFYcBsRUqxO3Ok"
+uri = "file://static/diagrams/3_diagrama_relacionamento.png"
+type = "image"
+title = "Diagrama de Relacionamento entre Módulos"
+
+[[outputs]]
+id = "Ibcj1E1O5X6BYzmTQliAQ"
+uri = "file://static/diagrams/4_diagrama_caso_uso.png"
+type = "image"
+title = "Diagrama de Casos de Uso"

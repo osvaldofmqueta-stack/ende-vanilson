@@ -11,3 +11,4 @@ tzdata==2025.2
 asgiref==3.10.0
 sqlparse==0.5.3
 Pillow==12.2.0
+matplotlib
