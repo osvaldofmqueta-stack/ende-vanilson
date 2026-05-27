@@ -6,6 +6,7 @@ urlpatterns = [
     path('faturas/<int:pk>/', views.fatura_detail, name='fatura_detail'),
     path('faturas/<int:pk>/pdf/', views.fatura_pdf, name='fatura_pdf'),
     path('faturas/<int:pk>/pagamento/', views.registrar_pagamento, name='registrar_pagamento'),
+    path('faturas/<int:pk>/eliminar/', views.fatura_delete, name='fatura_delete'),
     path('faturas/novo/', views.fatura_create, name='fatura_create'),
     path('faturas/gerar-auto/', views.gerar_faturas_automaticas, name='gerar_faturas_auto'),
     path('divida/', views.controlo_divida, name='controlo_divida'),

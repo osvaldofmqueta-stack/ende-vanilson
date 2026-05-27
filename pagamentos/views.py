@@ -285,6 +285,16 @@ def acionar_suspensao_automatica(request):
     return redirect('controlo_divida')
 
 @login_required
+def fatura_delete(request, pk):
+    fatura = get_object_or_404(Fatura, pk=pk)
+    if request.method == 'POST':
+        numero = fatura.numero_fatura
+        fatura.delete()
+        messages.success(request, f"Fatura '{numero}' eliminada com sucesso.")
+        return redirect('fatura_list')
+    return redirect('fatura_list')
+
+@login_required
 def controlo_divida(request):
     """
     Dashboard de controle de dívidas - mostra clientes com faturas pendentes/vencidas

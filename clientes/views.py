@@ -67,3 +67,13 @@ def cliente_toggle_status(request, pk):
     cliente.save()
     messages.info(request, f"Status do cliente {cliente.nome} alterado para {cliente.status}.")
     return redirect('cliente_list')
+
+@login_required
+def cliente_delete(request, pk):
+    cliente = get_object_or_404(Cliente, pk=pk)
+    if request.method == 'POST':
+        nome = cliente.nome
+        cliente.delete()
+        messages.success(request, f"Cliente '{nome}' eliminado com sucesso.")
+        return redirect('cliente_list')
+    return redirect('cliente_list')

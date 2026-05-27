@@ -9,4 +9,5 @@ urlpatterns = [
     path('leitura/<int:pk>/', views.contador_registrar_leitura, name='contador_registrar_leitura'),
     path('avariado/<int:pk>/', views.contador_marcar_avariado, name='contador_marcar_avariado'),
     path('toggle-status/<int:pk>/', views.contador_toggle_status, name='contador_toggle_status'),
+    path('eliminar/<int:pk>/', views.contador_delete, name='contador_delete'),
 ]

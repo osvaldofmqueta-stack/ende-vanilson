@@ -50,6 +50,17 @@ def contador_toggle_status(request, pk):
     return redirect('contador_list')
 
 @login_required
+def contador_delete(request, pk):
+    from django.contrib import messages
+    contador = get_object_or_404(Contador, pk=pk)
+    if request.method == 'POST':
+        numero = contador.numero_serie
+        contador.delete()
+        messages.success(request, f"Contador '{numero}' eliminado com sucesso.")
+        return redirect('contador_list')
+    return redirect('contador_list')
+
+@login_required
 def contador_marcar_avariado(request, pk):
     contador = get_object_or_404(Contador, pk=pk)
     contador.status = 'AVARIADO'

@@ -54,6 +54,14 @@
                             <a href="{% url 'cliente_toggle_status' cliente.pk %}" class="btn btn-sm {% if cliente.status == 'ATIVO' %}btn-warning{% else %}btn-success{% endif %}">
                                 {% if cliente.status == 'ATIVO' %}Desativar{% else %}Ativar{% endif %}
                             </a>
+                            <button type="button" class="btn btn-sm btn-danger"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteModal"
+                                data-url="{% url 'cliente_delete' cliente.pk %}"
+                                data-nome="{{ cliente.nome }}"
+                                data-tipo="cliente">
+                                Eliminar
+                            </button>
                         </td>
                     </tr>
                     {% empty %}
@@ -66,4 +74,38 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de Confirmação de Eliminação -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body text-center px-4 pb-2">
+                <div class="mb-3" style="font-size:3rem;">🗑️</div>
+                <h5 class="fw-bold text-danger mb-2">Eliminar Cliente</h5>
+                <p class="text-muted mb-0">Tem a certeza que deseja eliminar o cliente</p>
+                <p class="fw-semibold mb-0" id="deleteNome"></p>
+                <p class="text-muted mt-2" style="font-size:0.85rem;">Esta ação é <strong>permanente</strong> e não pode ser desfeita.<br>Todos os dados associados serão eliminados.</p>
+            </div>
+            <div class="modal-footer border-0 d-flex justify-content-center gap-2 pb-4">
+                <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" method="post" class="m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger px-4 rounded-pill">Sim, Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const btn = event.relatedTarget;
+        document.getElementById('deleteNome').textContent = '"' + btn.getAttribute('data-nome') + '"';
+        document.getElementById('deleteForm').action = btn.getAttribute('data-url');
+    });
+</script>
 {% endblock %}
