@@ -28,7 +28,7 @@ fi
 echo "   Endereco: http://localhost:8000"
 echo "   Para parar: Ctrl+C"
 echo ""
-echo "  ============================================================="
+echo "   Utilize as palavras-passe definidas durante a instalacao."
 echo ""
 
 (sleep 2 && (

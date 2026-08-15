@@ -77,14 +77,41 @@ Sistema completo de gestão de energia desenvolvido com Python Django para geren
 - Valor da Fatura com base na tarifa por kWh
 - Atualização automática de saldo do cliente
 
-## Como Usar
+## Como Executar no Replit
 
-### 1. Criar Superusuário (Admin)
+### 1. Instalar dependências
 ```bash
-python manage.py createsuperuser
+pip install -r requirements.txt
 ```
 
-### 2. Acessar o Sistema
+No Windows, o instalador `INSTALAR.bat` repete automaticamente o download até
+três vezes quando a ligação ao servidor de pacotes é interrompida.
+
+### 2. Aplicar migrações
+```bash
+python3.11 manage.py migrate
+```
+
+### 3. Criar utilizadores padrão
+```bash
+python3.11 manage.py criar_utilizadores_padrao
+```
+O comando solicita as palavras-passe de forma segura. Se um utilizador já
+existir, a palavra-passe atual não é alterada.
+
+### 4. Iniciar o servidor
+```bash
+python3.11 manage.py runserver 0.0.0.0:5000
+```
+O workflow "Start application" já executa este comando automaticamente.
+
+Os utilizadores criados são `admin`, `financeiro` e `operador`; as palavras-passe
+são definidas pelo operador durante o passo anterior e não ficam guardadas na
+documentação.
+
+## Como Usar
+
+### 1. Acessar o Sistema
 - **Home Page:** http://localhost:5000/
 - **Dashboard:** http://localhost:5000/dashboard/
 - **Admin Panel:** http://localhost:5000/admin/

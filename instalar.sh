@@ -65,9 +65,24 @@ source venv/bin/activate
 # ---- Instalar dependencias ----
 echo ""
 echo "  [2/5] A instalar dependencias (pode demorar 2-3 minutos)..."
-pip install -r requirements_local.txt --quiet --disable-pip-version-check
-if [ $? -ne 0 ]; then
-    echo -e "  ${RED}[ERRO]${NC} Falha na instalacao das dependencias."
+echo "  Se a ligacao cair, o instalador tentara novamente automaticamente."
+INSTALL_OK=0
+for ATTEMPT in 1 2 3; do
+    if python -m pip install -r requirements.txt --prefer-binary --retries 5 --timeout 120 --disable-pip-version-check; then
+        INSTALL_OK=1
+        break
+    fi
+    if [ "$ATTEMPT" -lt 3 ]; then
+        echo ""
+        echo -e "  ${YELLOW}[AVISO]${NC} A ligacao foi interrompida. Nova tentativa em 10 segundos..."
+        sleep 10
+    fi
+done
+
+if [ "$INSTALL_OK" -ne 1 ]; then
+    echo ""
+    echo -e "  ${RED}[ERRO]${NC} Nao foi possivel descarregar as dependencias apos 3 tentativas."
+    echo "  Verifique a ligacao a Internet, VPN/proxy ou firewall e tente novamente."
     exit 1
 fi
 echo -e "  ${GREEN}[OK]${NC} Dependencias instaladas."
@@ -85,8 +100,9 @@ echo -e "  ${GREEN}[OK]${NC} Base de dados configurada."
 
 # ---- Utilizadores padrao ----
 echo ""
-echo "  [4/5] A criar/redefinir utilizadores padrao..."
-python manage.py redefinir_senhas
+echo "  [4/5] A configurar utilizadores..."
+echo "  As palavras-passe serao solicitadas de forma segura."
+python manage.py criar_utilizadores_padrao
 
 # ---- Ficheiros estaticos ----
 echo ""
@@ -99,12 +115,7 @@ echo "  ============================================================="
 echo -e "  ${GREEN}  INSTALACAO CONCLUIDA COM SUCESSO!${NC}"
 echo "  ============================================================="
 echo ""
-echo "   Credenciais de acesso:"
-echo "   ---------------------------------------------------------"
-echo "    Administrador :  admin       /  admin@2025"
-echo "    Financeiro    :  financeiro  /  fin@2025"
-echo "    Operador      :  operador    /  oper@2025"
-echo "   ---------------------------------------------------------"
+echo "   Utilize as palavras-passe definidas no passo 4 para iniciar sessao."
 echo ""
 echo "   Endereco local: http://localhost:8000"
 echo "   Para parar o servidor: pressione Ctrl+C"

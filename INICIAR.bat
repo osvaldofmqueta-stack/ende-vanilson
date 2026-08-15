@@ -34,12 +34,7 @@ echo    Local:     http://localhost:8000
 echo    Na rede:   http://%COMPUTERNAME%:8000
 echo   ----------------------------------------------------------
 echo.
-echo   Credenciais de acesso:
-echo   ----------------------------------------------------------
-echo    Administrador :  admin       /  admin@2025
-echo    Financeiro    :  financeiro  /  fin@2025
-echo    Operador      :  operador    /  oper@2025
-echo   ----------------------------------------------------------
+echo   Utilize as palavras-passe definidas durante a instalacao.
 echo.
 echo   Para parar o servidor: pressione Ctrl+C
 echo.

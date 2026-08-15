@@ -1,14 +1,21 @@
 [project]
 name = "repl-nix-workspace"
 version = "0.1.0"
-description = "Add your description here"
+description = "Sistema de Gestão de Energia"
 requires-python = ">=3.11"
 dependencies = [
-    "django>=5.2.7",
-    "django-filter>=25.2",
-    "djangorestframework>=3.16.1",
-    "pillow>=11.3.0",
-    "psycopg2-binary>=2.9.11",
-    "python-decouple>=3.8",
-    "reportlab>=4.4.4",
+    "asgiref==3.12.1",
+    "django==5.2.17",
+    "django-filter==26.1",
+    "djangorestframework==3.18.0",
+    "gunicorn==26.0.0",
+    "matplotlib==3.11.1",
+    "numpy==2.4.6",
+    "openpyxl==3.1.5",
+    "pillow==12.3.0",
+    "psycopg2-binary==2.9.12",
+    "python-decouple==3.8",
+    "reportlab==5.0.0",
+    "sqlparse==0.6.0",
+    "tzdata==2026.3",
 ]

@@ -31,14 +31,13 @@ REQUISITO UNICO: Python 3.8 ou superior
   Endereco manual: http://localhost:8000
 
 ================================================================
-  CREDENCIAIS DE ACESSO
+  UTILIZADORES E SEGURANCA
 ================================================================
 
-  FUNCAO          UTILIZADOR    SENHA
-  --------------  ------------  ----------
-  Administrador   admin         admin@2025
-  Financeiro      financeiro    fin@2025
-  Operador        operador      oper@2025
+  Durante a instalacao, o sistema solicita as palavras-passe
+  dos utilizadores admin, financeiro e operador.
+  No final da instalacao, as credenciais efetivamente configuradas
+  sao exibidas no ecra. Guarde-as num local seguro.
 
   Nota: O Financeiro e o Operador NAO tem acesso ao painel
         de administracao Django (/admin/), apenas ao sistema.
@@ -65,7 +64,7 @@ REQUISITO UNICO: Python 3.8 ou superior
   instalar.sh           -> Instalador (Linux/Mac)
   iniciar.sh            -> Iniciar sistema (Linux/Mac)
   manage.py             -> Script principal Django
-  requirements_local.txt-> Lista de dependencias
+  requirements.txt      -> Lista de dependencias
   db.sqlite3            -> Base de dados (criada apos instalacao)
   venv/                 -> Ambiente virtual Python (criado pelo instalador)
 
