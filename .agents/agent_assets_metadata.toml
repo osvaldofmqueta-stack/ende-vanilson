@@ -49,3 +49,17 @@ mtime_ms = 1788089908952
 storage_uri = "gcs://replit-rams-assets-spock/rams/assets/repl:ac0e2a7d-2f8f-435b-9610-f22f7dd1862b/bccbd288-2723-4aab-a665-3873d87af49a/8e269086-6a1f-441c-aa26-6a1a77a3209e"
 storage_version_token = "1788089914068097"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "1Jad1eGgH4R36RzDWxuBj"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_sem_historial_ende.docx"
+type = "word_document"
+title = "Documento corrigido — sem historial da ENDE"
+description = "Cópia do trabalho com a seção 'Breve historial da empresa ENDE' e a respetiva entrada do índice removidas. As referências à ENDE necessárias para o caso de estudo foram mantidas."
+logical_id = "4e528610-8691-4762-9ba2-edcff47a5224"
+content_hash = "sha256:f97db0f4183e9448d350482b5410ca17b69d3ed1d767743be0334a295fc73761"
+size = 2899880
+mtime_ms = 1788092921511
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/4e528610-8691-4762-9ba2-edcff47a5224/214f8cf9-ae64-4ddc-a2ca-76123555ca59"
+storage_version_token = "1788092927166575"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
