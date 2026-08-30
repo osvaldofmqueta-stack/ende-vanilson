@@ -51,8 +51,8 @@ Sistema completo de gestão de energia desenvolvido com Python Django para geren
 - Templates responsivos com Bootstrap 5
 
 ### ✅ Infraestrutura
-- Base de dados PostgreSQL configurada
-- Workflow Django configurado (porta 5000)
+- Base de dados SQLite configurada (`db.sqlite3`)
+- Workflow Django configurado para a porta 5000
 - Sistema de migração de base de dados
 - Configuração de ficheiros estáticos e media
 
@@ -130,10 +130,10 @@ documentação.
 ## Stack Tecnológica
 
 ### Backend
-- Django 5.2.7
-- PostgreSQL (Neon via Replit)
-- Django REST Framework 3.16.1
-- Django Filter 25.2
+- Django 5.2.17
+- SQLite
+- Django REST Framework 3.18.0
+- Django Filter 26.1
 
 ### Frontend
 - Bootstrap 5.3
@@ -141,10 +141,10 @@ documentação.
 - HTML/CSS/JavaScript
 
 ### Bibliotecas
-- ReportLab 4.4.4 (preparado para PDFs)
-- Pillow 11.3.0 (processamento de imagens)
+- ReportLab 5.0.0 (preparado para PDFs)
+- Pillow 12.3.0 (processamento de imagens)
 - python-decouple 3.8 (gestão de configurações)
-- psycopg2-binary 2.9.11 (PostgreSQL adapter)
+- psycopg2-binary 2.9.12 (disponível para futuras ligações PostgreSQL)
 
 ## Próximas Funcionalidades (Fase 2)
 
@@ -236,7 +236,7 @@ python manage.py collectstatic
 - Logs do workflow disponíveis no Replit
 
 ### Backup
-- Base de dados PostgreSQL com backup automático (Neon)
+- A base de dados SQLite está no ficheiro `db.sqlite3`; faça uma cópia desse ficheiro para backup
 - Ficheiros de media devem ter backup separado
 
 ### Monitoramento
@@ -245,5 +245,5 @@ python manage.py collectstatic
 
 ---
 
-**Desenvolvido com Django + PostgreSQL + Bootstrap**  
-**Replit Environment - Outubro 2025**
+**Desenvolvido com Django + SQLite + Bootstrap**  
+**Replit Environment - Agosto 2026**
