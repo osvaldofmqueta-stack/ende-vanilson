@@ -63,3 +63,17 @@ mtime_ms = 1788092921511
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/4e528610-8691-4762-9ba2-edcff47a5224/214f8cf9-ae64-4ddc-a2ca-76123555ca59"
 storage_version_token = "1788092927166575"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "fLNvRKhtvFi4bu8ZeeUsy"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_ambiente_replit.docx"
+type = "word_document"
+title = "Documento atualizado — ambiente Replit esclarecido"
+description = "Versão do trabalho sem o historial da ENDE e com uma seção clara sobre o ambiente de trabalho utilizado: Replit, Python 3.11, Django 5.2.17, SQLite, Bootstrap e navegador."
+logical_id = "062c0716-235c-468a-91ef-136d8332fc34"
+content_hash = "sha256:1e671bedd8702d2c406505d34c42f8d43e29b41ea3805a516d85b6d0c97af96f"
+size = 2899417
+mtime_ms = 1788093131371
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/062c0716-235c-468a-91ef-136d8332fc34/27c6f624-10f7-4f9e-9c38-97f77d03f9a0"
+storage_version_token = "1788093136908706"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
