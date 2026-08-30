@@ -1,2 +1,3 @@
 - [Windows dependency downloads](windows-pip-retries.md) — installers should retry transient pip connection resets before asking the user to troubleshoot networking.
 - [Bootstrap credentials](bootstrap-credentials.md) — setup must collect operator passwords interactively or from secrets, never publish defaults.
+- [Replit workflow ports](replit-workflow-ports.md) — Django webview workflows need an explicit 5000 port because `${PORT}` may not expand.

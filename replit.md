@@ -103,7 +103,10 @@ existir, a palavra-passe atual não é alterada.
 ```bash
 python3.11 manage.py runserver 0.0.0.0:5000
 ```
-O workflow "Start application" já executa este comando automaticamente.
+O workflow "Start application" já executa automaticamente:
+```bash
+python3.11 manage.py migrate --noinput && python3.11 manage.py runserver 0.0.0.0:5000
+```
 
 Os utilizadores criados são `admin`, `financeiro` e `operador`; as palavras-passe
 são definidas pelo operador durante o passo anterior e não ficam guardadas na
