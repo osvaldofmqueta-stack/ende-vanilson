@@ -77,3 +77,17 @@ mtime_ms = 1788093131371
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/062c0716-235c-468a-91ef-136d8332fc34/27c6f624-10f7-4f9e-9c38-97f77d03f9a0"
 storage_version_token = "1788093136908706"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "zinQkqrMuX7YgB5jeOIDj"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_final.docx"
+type = "word_document"
+title = "Trabalho final — versão sem referências ao Replit"
+description = "Documento verificado integralmente: todas as referências ao Replit foram removidas, incluindo índice, lista de tecnologias, seção de ambiente e texto técnico. O historial da ENDE também permanece removido."
+logical_id = "a3a048a2-e2e8-45ef-ad24-11d116466e1e"
+content_hash = "sha256:17d16dfe73e7cc54563e1a5a92aa0da3e8049909e7a23437429d4a3377181585"
+size = 2899065
+mtime_ms = 1788093206211
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/a3a048a2-e2e8-45ef-ad24-11d116466e1e/d654e163-3393-48cd-a334-e95b07fcd28b"
+storage_version_token = "1788093210966805"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
