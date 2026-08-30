@@ -91,3 +91,17 @@ mtime_ms = 1788093206211
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/a3a048a2-e2e8-45ef-ad24-11d116466e1e/d654e163-3393-48cd-a334-e95b07fcd28b"
 storage_version_token = "1788093210966805"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "epABoYUPWueMzxUjTokqO"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_corrigido.docx"
+type = "word_document"
+title = "Documento corrigido — apenas historial da ENDE removido"
+description = "Versão corrigida conforme solicitado: remove somente o historial da ENDE e a respetiva entrada do índice. A lista de tecnologias e as referências originais a PyCharm e PostgreSQL foram preservadas. O Replit não aparece no documento."
+logical_id = "cb2221f2-8af3-4bb5-8291-5fa56dddb13e"
+content_hash = "sha256:f97db0f4183e9448d350482b5410ca17b69d3ed1d767743be0334a295fc73761"
+size = 2899880
+mtime_ms = 1788093294364
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/cb2221f2-8af3-4bb5-8291-5fa56dddb13e/e8395b8b-4a4c-4608-8058-b54a0b973c38"
+storage_version_token = "1788093298685840"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
