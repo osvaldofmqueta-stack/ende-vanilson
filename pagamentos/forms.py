@@ -21,13 +21,13 @@ class FaturaSimplesForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cliente'].queryset = Cliente.objects.filter(tipo_cliente='POS_PAGO', status='ATIVO')
-        self.fields['cliente'].empty_label = 'Selecionar cliente pós-pago...'
+        self.fields['cliente'].empty_label = 'Selecionar cliente pago...'
 
     def clean_cliente(self):
         cliente = self.cleaned_data.get('cliente')
         if cliente and cliente.tipo_cliente != 'POS_PAGO':
             raise forms.ValidationError(
-                f'O cliente "{cliente.nome}" é pré-pago. Faturas são exclusivas para clientes pós-pagos.'
+                f'O cliente "{cliente.nome}" está configurado para recarga. Faturas são exclusivas para clientes pagos por fatura.'
             )
         return cliente
 
@@ -76,7 +76,7 @@ class RecargaForm(forms.ModelForm):
             tipo_cliente='PRE_PAGO',
             status='ATIVO',
         ).order_by('nome')
-        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago...'
+        self.fields['cliente'].empty_label = 'Selecionar cliente pago...'
 
     def clean_valor(self):
         valor = self.cleaned_data['valor']

@@ -11,13 +11,13 @@ class ContadorAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cliente'].queryset = Cliente.objects.filter(tipo_cliente='PRE_PAGO')
-        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago...'
+        self.fields['cliente'].empty_label = 'Selecionar cliente pago...'
 
     def clean_cliente(self):
         cliente = self.cleaned_data.get('cliente')
         if cliente and cliente.tipo_cliente != 'PRE_PAGO':
             raise forms.ValidationError(
-                f'O cliente "{cliente.nome}" é pós-pago. Apenas clientes pré-pagos podem ser associados a contadores.'
+                f'O cliente "{cliente.nome}" está configurado para faturação. Apenas clientes pagos por recarga podem ser associados a contadores.'
             )
         return cliente
 

@@ -24,8 +24,8 @@
             <div class="card-body">
                 <h3 class="text-center mb-3">{{ tarifa.preco_kwh }} <small>Kz/kWh</small></h3>
                 <div class="text-center small mb-3">
-                    <p class="mb-1 text-muted">Pós-pago: <strong>{{ tarifa.preco_cliente_pos }} Kz</strong></p>
-                    <p class="mb-1 text-muted">Pré-pago: <strong>{{ tarifa.preco_cliente_pre }} Kz</strong></p>
+                    <p class="mb-1 text-muted">Pago (fatura): <strong>{{ tarifa.preco_cliente_pos }} Kz</strong></p>
+                    <p class="mb-1 text-muted">Pago (recarga): <strong>{{ tarifa.preco_cliente_pre }} Kz</strong></p>
                 </div>
                 {% if tarifa.taxa_fixa > 0 %}
                 <p class="text-muted text-center">Taxa Fixa Mensal: <strong>{{ tarifa.taxa_fixa }} Kz</strong></p>

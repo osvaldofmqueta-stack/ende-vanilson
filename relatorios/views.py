@@ -134,8 +134,8 @@ def _pdf_clientes_ativos(elems, styles, relatorio):
         ("Total de Clientes", clientes.count()),
         ("Ativos", ativos),
         ("Inativos", inativos),
-        ("Pré-pago", pre),
-        ("Pós-pago", pos),
+        ("Pago - recarga", pre),
+        ("Pago - fatura", pos),
     ])
 
     cabecalho = [['Nº Cliente', 'Nome', 'NIF', 'Tipo', 'Status', 'Data Cadastro']]

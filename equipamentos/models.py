@@ -19,7 +19,7 @@ class Contador(models.Model):
     
     numero_serie = models.CharField(max_length=50, unique=True)
     tipo_conexao = models.CharField(max_length=15, choices=TIPO_CONEXAO_CHOICES, default='MONOFASICO')
-    numero_cartao = models.CharField(max_length=20, blank=True, null=True, help_text='Número do cartão, quando aplicável ao plano pré-pago')
+    numero_cartao = models.CharField(max_length=20, blank=True, null=True, help_text='Número do cartão, quando aplicável ao pagamento por recarga')
     cliente = models.OneToOneField(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='contador')
     endereco_instalacao = models.TextField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='ATIVO')

@@ -140,7 +140,7 @@ def contador_registrar_leitura(request, pk):
                 messages.success(
                     request,
                     f"Leitura registada. Consumo: {consumo} kWh. "
-                    "O valor será incluído na fatura do cliente pós-pago."
+                    "O valor será incluído na fatura do cliente pago."
                 )
 
             return redirect('contador_historico', pk=pk)

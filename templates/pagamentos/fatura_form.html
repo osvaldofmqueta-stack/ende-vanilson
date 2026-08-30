@@ -8,13 +8,13 @@
             <a href="{% url 'fatura_list' %}" class="btn btn-sm btn-outline-secondary">← Voltar</a>
             <div>
                 <h3 class="mb-0 fw-bold">Emitir Fatura</h3>
-                <small class="text-muted">Faturas exclusivas para clientes pós-pagos</small>
+                <small class="text-muted">Faturas de clientes pagos</small>
             </div>
         </div>
 
         <div class="alert alert-info d-flex gap-2 align-items-start py-2 mb-4">
             <span style="font-size:1.1rem;">ℹ️</span>
-            <span>Apenas clientes do tipo <strong>Pós-pago</strong> são apresentados. Para recargas de clientes pré-pagos, utilize o módulo de <strong>Pagamentos &gt; Recargas</strong>.</span>
+            <span>Apenas clientes <strong>pagos</strong> são apresentados. Para registar uma recarga, utilize o módulo de <strong>Pagamentos &gt; Recargas</strong>.</span>
         </div>
 
         <div class="card shadow-sm border-0">
@@ -28,7 +28,7 @@
 
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Cliente Pós-pago <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold">Cliente Pago <span class="text-danger">*</span></label>
                             {{ form.cliente }}
                             {% if form.cliente.errors %}<div class="text-danger small mt-1">{{ form.cliente.errors|first }}</div>{% endif %}
                         </div>

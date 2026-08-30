@@ -20,8 +20,8 @@ class Perfil(models.Model):
 
 class Cliente(models.Model):
     TIPO_CLIENTE_CHOICES = [
-        ('PRE_PAGO', 'Pré-pago'),
-        ('POS_PAGO', 'Pós-pago'),
+        ('PRE_PAGO', 'Pago - recarga'),
+        ('POS_PAGO', 'Pago - fatura'),
     ]
     
     STATUS_CHOICES = [

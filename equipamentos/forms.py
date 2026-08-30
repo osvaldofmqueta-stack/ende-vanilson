@@ -10,7 +10,7 @@ class ContadorForm(forms.ModelForm):
             'numero_serie': forms.TextInput(attrs={'class': 'form-control'}),
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'tipo_conexao': forms.Select(attrs={'class': 'form-control'}),
-            'numero_cartao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Número do cartão pré-pago'}),
+            'numero_cartao': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Número do cartão do cliente pago'}),
             'endereco_instalacao': forms.TextInput(attrs={'class': 'form-control'}),
             'data_instalacao': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'status': forms.Select(attrs={'class': 'form-control'}),
@@ -21,7 +21,7 @@ class ContadorForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cliente'].queryset = Cliente.objects.filter(status='ATIVO').order_by('nome')
-        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago ou pós-pago...'
+        self.fields['cliente'].empty_label = 'Selecionar cliente pago...'
         self.fields['numero_cartao'].required = False
 
     def clean_cliente(self):
@@ -32,5 +32,5 @@ class ContadorForm(forms.ModelForm):
         cliente = cleaned_data.get('cliente')
         numero_cartao = cleaned_data.get('numero_cartao')
         if cliente and cliente.tipo_cliente == 'PRE_PAGO' and not numero_cartao:
-            self.add_error('numero_cartao', 'Informe o número do cartão para um contador pré-pago.')
+            self.add_error('numero_cartao', 'Informe o número do cartão para um contador de cliente pago.')
         return cleaned_data
