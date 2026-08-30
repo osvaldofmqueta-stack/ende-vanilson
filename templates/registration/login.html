@@ -495,26 +495,6 @@
                     </button>
                 </form>
 
-                <!-- Credenciais de Acesso -->
-                <div class="creds-box">
-                    <div class="creds-box-header" id="credsToggle" onclick="toggleCreds()">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                        </svg>
-                        Como obter acesso
-                        <svg id="credsChevron" style="margin-left:auto; transition:.2s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="6 9 12 15 18 9"/>
-                        </svg>
-                    </div>
-                    <div id="credsBody" style="display:none;">
-                        <p class="text-muted mb-0">
-                            As credenciais são definidas pelo administrador
-                            durante a instalação. Contacte o administrador do
-                            sistema se não tiver acesso.
-                        </p>
-                    </div>
-                </div>
-
                 <div class="login-footer">Angola · © 2025 Sistema de Gestão de Energia</div>
             </div>
         </div>
@@ -547,24 +527,6 @@
             btnLabel.textContent = 'A autenticar…';
         });
 
-        function toggleCreds() {
-            const body    = document.getElementById('credsBody');
-            const chevron = document.getElementById('credsChevron');
-            const open    = body.style.display === 'none';
-            body.style.display    = open ? 'block' : 'none';
-            chevron.style.transform = open ? 'rotate(180deg)' : 'rotate(0)';
-        }
-
-        // Auto-fill on credential row click
-        document.querySelectorAll('.creds-table tbody tr').forEach(row => {
-            row.style.cursor = 'pointer';
-            row.title = 'Clique para preencher';
-            row.addEventListener('click', function() {
-                const codes = this.querySelectorAll('code');
-                document.querySelector('input[name="username"]').value = codes[0].textContent;
-                document.querySelector('input[name="password"]').value = codes[1].textContent;
-            });
-        });
     </script>
 </body>
 </html>
