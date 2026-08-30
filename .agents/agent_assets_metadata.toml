@@ -133,3 +133,17 @@ mtime_ms = 1788093674068
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/d26c8acc-b240-4842-8df6-720e824dc5bf/16418e59-48ea-4778-bb47-455377f10f39"
 storage_version_token = "1788093689744578"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "4yRByPAB0QVKvPa6o-cvv"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_matriz_atores.docx"
+type = "word_document"
+title = "Documento com matriz de atores e funcionalidades"
+description = "A antiga Figura 5 — Diagrama de casos de uso foi substituída pelo Quadro 9, com Administrador, Operador de atendimento, Financeiro e Cliente, indicando claramente as ações de cada ator. O índice e as listas foram atualizados."
+logical_id = "98c234fa-617b-453e-949c-cd96616a5c87"
+content_hash = "sha256:be59306bb9081e633305d19dc72054e1d66c81975bf3279b579f4b3b3b730b29"
+size = 2539811
+mtime_ms = 1788093845291
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/98c234fa-617b-453e-949c-cd96616a5c87/44efeb13-8c66-42b1-80be-806f7b3e06ef"
+storage_version_token = "1788093850896118"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
