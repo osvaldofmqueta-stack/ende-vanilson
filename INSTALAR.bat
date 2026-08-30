@@ -66,10 +66,9 @@ echo  [OK] Base de dados configurada.
 :: ---- Utilizadores ----
 echo.
 echo  [4/5] A configurar utilizadores...
-echo  A gerar palavras-passe seguras automaticamente.
-echo  Numa reinstalacao, as passwords serao renovadas.
-set "CREDENTIALS_FILE=%~dp0CREDENCIAIS_ACESSO.txt"
-"%PYTHON%" manage.py criar_utilizadores_padrao --reset-existing --auto-passwords --credentials-file "%CREDENTIALS_FILE%"
+echo  Numa instalacao nova, defina as palavras-passe quando solicitado.
+echo  Numa reinstalacao, as palavras-passe existentes serao mantidas.
+"%PYTHON%" manage.py criar_utilizadores_padrao
 if errorlevel 1 goto users_error
 
 :: ---- Ficheiros estaticos ----
@@ -87,14 +86,10 @@ echo.
 echo   O sistema vai abrir no navegador em alguns segundos...
 echo.
 echo   Endereco local: http://localhost:8000
-echo   Credenciais guardadas em: CREDENCIAIS_ACESSO.txt
+echo   As palavras-passe foram definidas durante a configuracao.
 echo   Para parar o servidor: pressione Ctrl+C
 echo.
 echo  ===============================================================
-echo.
-if exist "%CREDENTIALS_FILE%" (
-    type "%CREDENTIALS_FILE%"
-)
 echo.
 
 :: Abrir navegador apos 3 segundos
@@ -173,6 +168,5 @@ goto fail
 echo.
 echo  A instalacao nao foi concluida. Corrija o problema indicado e execute
 echo  INSTALAR.bat novamente.
-if defined CREDENTIALS_FILE if exist "%CREDENTIALS_FILE%" del /q "%CREDENTIALS_FILE%" >nul 2>&1
 pause
 endlocal & exit /b 1

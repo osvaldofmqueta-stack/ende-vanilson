@@ -1,26 +1,43 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from django.db import models
 from django.contrib.auth.models import User
 from .models import Cliente, Perfil
-from .forms import ClienteForm, UserProfileForm
+from .forms import ClienteForm, UserPasswordChangeForm, UserProfileForm
 
 @login_required
 def perfil_edit(request):
     perfil, created = Perfil.objects.get_or_create(user=request.user)
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            perfil.telefone = form.cleaned_data.get('telefone')
-            perfil.save()
-            messages.success(request, "Perfil atualizado com sucesso!")
-            return redirect('dashboard')
+        action = request.POST.get('action', 'profile')
+        if action == 'password':
+            form = UserProfileForm(instance=request.user, initial={'telefone': perfil.telefone})
+            password_form = UserPasswordChangeForm(request.user, request.POST)
+            if password_form.is_valid():
+                user = password_form.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, "Palavra-passe alterada com sucesso!")
+                return redirect('perfil_edit')
+        else:
+            form = UserProfileForm(request.POST, instance=request.user)
+            password_form = UserPasswordChangeForm(request.user)
+            if form.is_valid():
+                form.save()
+                perfil.telefone = form.cleaned_data.get('telefone')
+                perfil.save()
+                messages.success(request, "Perfil atualizado com sucesso!")
+                return redirect('dashboard')
     else:
         form = UserProfileForm(instance=request.user, initial={'telefone': perfil.telefone})
-    
-    return render(request, 'clientes/perfil_form.html', {'form': form})
+        password_form = UserPasswordChangeForm(request.user)
+
+    return render(
+        request,
+        'clientes/perfil_form.html',
+        {'form': form, 'password_form': password_form},
+    )
 
 @login_required
 def cliente_list(request):
