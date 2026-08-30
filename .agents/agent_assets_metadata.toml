@@ -119,3 +119,17 @@ mtime_ms = 1788093406511
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/03b17e1c-f7cc-4c2f-8c98-cf5bd0d0c8e8/237d18f8-ccd2-424e-b5c9-cd5fe600a507"
 storage_version_token = "1788093411123280"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "JmBL8nLJLl198dL0zpXWc"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_diagrama_complementar_maior.docx"
+type = "word_document"
+title = "Documento com diagrama complementar ampliado"
+description = "A seção 3.6.2 foi colocada numa página horizontal e o diagrama de classes foi ampliado para melhorar a leitura, mantendo a proporção. O índice e o restante conteúdo foram preservados."
+logical_id = "d26c8acc-b240-4842-8df6-720e824dc5bf"
+content_hash = "sha256:1b1d2e39fac5819b84fb951c02b25a4e20f14dba13cb27f2821b4404ebbe117c"
+size = 2900110
+mtime_ms = 1788093674068
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/d26c8acc-b240-4842-8df6-720e824dc5bf/16418e59-48ea-4778-bb47-455377f10f39"
+storage_version_token = "1788093689744578"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
