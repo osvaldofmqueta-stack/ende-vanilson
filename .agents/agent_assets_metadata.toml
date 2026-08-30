@@ -105,3 +105,17 @@ mtime_ms = 1788093294364
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/cb2221f2-8af3-4bb5-8291-5fa56dddb13e/e8395b8b-4a4c-4608-8058-b54a0b973c38"
 storage_version_token = "1788093298685840"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "42zDAYxYqWB1Wcg8-2b2d"
+uri = "file://attached_assets/trabalho_tema_pre_pago_pos_pago_corrigido_com_indice.docx"
+type = "word_document"
+title = "Documento corrigido com índice preservado"
+description = "Versão baseada no documento original: mantém o índice completo e a lista de tecnologias, remove somente o historial da ENDE e a respetiva linha do índice, sem referências ao Replit."
+logical_id = "03b17e1c-f7cc-4c2f-8c98-cf5bd0d0c8e8"
+content_hash = "sha256:971d65bdc92263d656f4259728b89ec9b223acb8cbff94cf5fa7a610961c538b"
+size = 2899927
+mtime_ms = 1788093406511
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/03b17e1c-f7cc-4c2f-8c98-cf5bd0d0c8e8/237d18f8-ccd2-424e-b5c9-cd5fe600a507"
+storage_version_token = "1788093411123280"
+content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
