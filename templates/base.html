@@ -252,6 +252,9 @@
                 </a>
                 <a href="/admin/" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Configurações</a>
                 <span class="badge bg-primary rounded-pill d-flex align-items-center px-3">{{ user.perfil.get_tipo_usuario_display }}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                    Sair
+                </button>
             </div>
         </div>
         {% endif %}
