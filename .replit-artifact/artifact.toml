@@ -12,7 +12,7 @@ paths = [ "/" ]
 localPort = 19084
 
 [services.development]
-run = "pnpm --filter @workspace/ende-vanilson run dev"
+run = "python3.11 manage.py migrate --noinput && python3.11 manage.py runserver 0.0.0.0:19084"
 
 [services.production]
 
