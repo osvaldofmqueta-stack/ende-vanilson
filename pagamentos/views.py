@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.utils import timezone
-from .models import Tarifa, Pagamento, Fatura
-from .forms import TarifaForm, PagamentoForm, FaturaSimplesForm
+from .models import Tarifa, Pagamento, Fatura, Recarga
+from .forms import TarifaForm, PagamentoForm, FaturaSimplesForm, RecargaForm
 from equipamentos.models import LeituraConsumo, Contador
 from decimal import Decimal
 from datetime import timedelta, date
@@ -15,6 +15,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from django.db.models import Sum, Count, Q, F
+from django.db import transaction
 
 @login_required
 def gerar_faturas_automaticas(request):
@@ -22,7 +23,11 @@ def gerar_faturas_automaticas(request):
     Gera faturas automaticamente para todos os clientes que tiveram leituras
     no último mês e ainda não têm fatura para esse período.
     """
-    leituras_pendentes = LeituraConsumo.objects.all() # Simplificado para demonstração
+    # Apenas clientes pós-pagos recebem faturas; o consumo pré-pago é
+    # liquidado directamente no saldo quando a leitura é registada.
+    leituras_pendentes = LeituraConsumo.objects.filter(
+        contador__cliente__tipo_cliente='POS_PAGO'
+    ).select_related('contador__cliente')
     faturas_geradas = 0
     
     # Período de referência (mês anterior ou atual)
@@ -203,6 +208,55 @@ def fatura_list(request):
     else:
         faturas = Fatura.objects.all()
     return render(request, 'pagamentos/fatura_list.html', {'faturas': faturas})
+
+
+@login_required
+def recarga_list(request):
+    if hasattr(request.user, 'perfil') and request.user.perfil.tipo_usuario == 'CLIENTE':
+        recargas = Recarga.objects.filter(cliente__email=request.user.email)
+    else:
+        recargas = Recarga.objects.select_related('cliente').all()
+
+    total_confirmado = recargas.filter(status='CONFIRMADO').aggregate(
+        total=Sum('valor')
+    )['total'] or Decimal('0.00')
+    return render(request, 'pagamentos/recarga_list.html', {
+        'recargas': recargas,
+        'total_confirmado': total_confirmado,
+    })
+
+
+@login_required
+@csrf_protect
+def recarga_create(request):
+    if hasattr(request.user, 'perfil') and request.user.perfil.tipo_usuario == 'CLIENTE':
+        messages.error(request, 'O registo de recargas é reservado aos operadores.')
+        return redirect('dashboard')
+
+    if request.method == 'POST':
+        form = RecargaForm(request.POST)
+        if form.is_valid():
+            with transaction.atomic():
+                recarga = form.save(commit=False)
+                recarga.status = 'CONFIRMADO'
+                recarga.data_confirmacao = timezone.now()
+                recarga.save()
+
+                cliente = recarga.cliente
+                cliente.saldo_atual = F('saldo_atual') + recarga.valor
+                cliente.save(update_fields=['saldo_atual'])
+                cliente.refresh_from_db(fields=['saldo_atual'])
+
+            messages.success(
+                request,
+                f"Recarga de {recarga.valor:,.2f} Kz confirmada. "
+                f"Saldo disponível de {cliente.saldo_atual:,.2f} Kz."
+            )
+            return redirect('recarga_list')
+        messages.error(request, 'Não foi possível registar a recarga. Verifique os dados.')
+    else:
+        form = RecargaForm()
+    return render(request, 'pagamentos/recarga_form.html', {'form': form})
 
 @login_required
 def fatura_create(request):

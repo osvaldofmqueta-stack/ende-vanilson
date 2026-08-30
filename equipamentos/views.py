@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import models
+from django.contrib import messages
+from decimal import Decimal, InvalidOperation
 from .models import Contador
 from .forms import ContadorForm
 
@@ -95,9 +97,16 @@ def contador_registrar_leitura(request, pk):
     if request.method == 'POST':
         nova_leitura = request.POST.get('leitura_atual')
         if nova_leitura:
-            from decimal import Decimal
             leitura_anterior = contador.leitura_atual
-            leitura_atual_dec = Decimal(nova_leitura)
+            try:
+                leitura_atual_dec = Decimal(nova_leitura)
+            except InvalidOperation:
+                messages.error(request, 'Informe uma leitura numérica válida.')
+                return render(request, 'equipamentos/contador_leitura.html', {'contador': contador})
+
+            if leitura_atual_dec < leitura_anterior:
+                messages.error(request, 'A leitura atual não pode ser inferior à leitura anterior.')
+                return render(request, 'equipamentos/contador_leitura.html', {'contador': contador})
             
             # Atualiza o contador
             contador.leitura_atual = leitura_atual_dec
@@ -114,9 +123,8 @@ def contador_registrar_leitura(request, pk):
                 operador=request.user
             )
             
-            # Contadores são pré-pagos: deduz consumo do saldo do cliente
             consumo = leitura_atual_dec - leitura_anterior
-            if consumo > 0 and contador.cliente:
+            if consumo > 0 and contador.cliente and contador.cliente.tipo_cliente == 'PRE_PAGO':
                 cliente = contador.cliente
                 tarifa = cliente.tarifa
                 preco_kwh = tarifa.preco_kwh if tarifa else Decimal('50.00')
@@ -125,11 +133,15 @@ def contador_registrar_leitura(request, pk):
                 if cliente.saldo_atual >= custo_consumo:
                     cliente.saldo_atual -= custo_consumo
                     cliente.save()
-                    from django.contrib import messages
                     messages.success(request, f"Leitura registada. Consumo: {consumo} kWh ({custo_consumo:.2f} Kz debitados). Saldo restante: {cliente.saldo_atual:.2f} Kz.")
                 else:
-                    from django.contrib import messages
                     messages.warning(request, f"Leitura registada mas saldo insuficiente. Consumo: {consumo} kWh ({custo_consumo:.2f} Kz). Saldo actual: {cliente.saldo_atual:.2f} Kz.")
+            elif consumo > 0 and contador.cliente:
+                messages.success(
+                    request,
+                    f"Leitura registada. Consumo: {consumo} kWh. "
+                    "O valor será incluído na fatura do cliente pós-pago."
+                )
 
             return redirect('contador_historico', pk=pk)
             

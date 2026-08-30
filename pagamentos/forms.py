@@ -1,6 +1,6 @@
 from django import apps
 from django import forms
-from .models import Tarifa, Fatura, Pagamento
+from .models import Tarifa, Fatura, Pagamento, Recarga
 from clientes.models import Cliente
 
 class FaturaSimplesForm(forms.ModelForm):
@@ -56,3 +56,30 @@ class PagamentoForm(forms.ModelForm):
             'referencia_multicaixa': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 1234567890'}),
             'observacoes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Observações (opcional)'}),
         }
+
+
+class RecargaForm(forms.ModelForm):
+    class Meta:
+        model = Recarga
+        fields = ['cliente', 'valor', 'metodo_pagamento', 'referencia_pagamento', 'observacoes']
+        widgets = {
+            'cliente': forms.Select(attrs={'class': 'form-control'}),
+            'valor': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'min': '0.01', 'placeholder': 'Valor da recarga em Kz'}),
+            'metodo_pagamento': forms.Select(attrs={'class': 'form-control'}),
+            'referencia_pagamento': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Referência ou comprovativo'}),
+            'observacoes': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Observações (opcional)'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['cliente'].queryset = Cliente.objects.filter(
+            tipo_cliente='PRE_PAGO',
+            status='ATIVO',
+        ).order_by('nome')
+        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago...'
+
+    def clean_valor(self):
+        valor = self.cleaned_data['valor']
+        if valor <= 0:
+            raise forms.ValidationError('O valor da recarga deve ser superior a zero.')
+        return valor

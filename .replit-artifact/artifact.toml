@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Ende Vanilson"
+description = "Sistema de gestão de energia em Django para administrar clientes, contadores, pagamentos e relatórios."
+version = "1.0.0"
+id = "artifacts/ende-vanilson"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19084
+
+[services.development]
+run = "pnpm --filter @workspace/ende-vanilson run dev"
+
+[services.production]
+
+[services.production.build]
+args = [ "pnpm", "--filter", "@workspace/ende-vanilson", "run", "build" ]
+
+[services.production.run]
+args = [ "uv", "run", "--project", "artifacts/ende-vanilson", "gunicorn", "--bind", "0.0.0.0:19084", "energia_gestao.wsgi:application" ]
+
+[services.production.run.env]
+PORT = "19084"
+DJANGO_SETTINGS_MODULE = "energia_gestao.settings"
+
+[services.env]
+PORT = "19084"
+BASE_PATH = "/"

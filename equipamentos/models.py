@@ -19,7 +19,7 @@ class Contador(models.Model):
     
     numero_serie = models.CharField(max_length=50, unique=True)
     tipo_conexao = models.CharField(max_length=15, choices=TIPO_CONEXAO_CHOICES, default='MONOFASICO')
-    numero_cartao = models.CharField(max_length=20, blank=True, null=True, help_text='Número do cartão (apenas para pré-pago)')
+    numero_cartao = models.CharField(max_length=20, blank=True, null=True, help_text='Número do cartão, quando aplicável ao plano pré-pago')
     cliente = models.OneToOneField(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name='contador')
     endereco_instalacao = models.TextField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='ATIVO')
@@ -38,21 +38,6 @@ class Contador(models.Model):
     
     def __str__(self):
         return f"{self.numero_serie} - {self.cliente.nome if self.cliente else 'Sem Cliente'}"
-
-    def clean(self):
-        if self.cliente and self.cliente.tipo_cliente != 'PRE_PAGO':
-            raise ValidationError(
-                {'cliente': f'O cliente "{self.cliente.nome}" é pós-pago. Contadores são exclusivos para clientes pré-pagos.'}
-            )
-
-    def save(self, *args, **kwargs):
-        if self.cliente and self.cliente.tipo_cliente != 'PRE_PAGO':
-            raise ValidationError(
-                f'Não é possível associar o cliente "{self.cliente.nome}" (pós-pago) a um contador. '
-                'Contadores são exclusivos para clientes pré-pagos.'
-            )
-        super().save(*args, **kwargs)
-
 
 class LeituraConsumo(models.Model):
     contador = models.ForeignKey(Contador, on_delete=models.CASCADE, related_name='leituras')

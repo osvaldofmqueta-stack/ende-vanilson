@@ -66,10 +66,10 @@ echo  [OK] Base de dados configurada.
 :: ---- Utilizadores ----
 echo.
 echo  [4/5] A configurar utilizadores...
-echo  As palavras-passe serao solicitadas de forma segura.
-echo  Numa reinstalacao, as passwords existentes serao atualizadas.
-set "CREDENTIALS_FILE=%TEMP%\energia_gestao_credenciais_%RANDOM%.txt"
-"%PYTHON%" manage.py criar_utilizadores_padrao --reset-existing --credentials-file "%CREDENTIALS_FILE%"
+echo  A gerar palavras-passe seguras automaticamente.
+echo  Numa reinstalacao, as passwords serao renovadas.
+set "CREDENTIALS_FILE=%~dp0CREDENCIAIS_ACESSO.txt"
+"%PYTHON%" manage.py criar_utilizadores_padrao --reset-existing --auto-passwords --credentials-file "%CREDENTIALS_FILE%"
 if errorlevel 1 goto users_error
 
 :: ---- Ficheiros estaticos ----
@@ -87,13 +87,13 @@ echo.
 echo   O sistema vai abrir no navegador em alguns segundos...
 echo.
 echo   Endereco local: http://localhost:8000
+echo   Credenciais guardadas em: CREDENCIAIS_ACESSO.txt
 echo   Para parar o servidor: pressione Ctrl+C
 echo.
 echo  ===============================================================
 echo.
 if exist "%CREDENTIALS_FILE%" (
     type "%CREDENTIALS_FILE%"
-    del /q "%CREDENTIALS_FILE%" >nul 2>&1
 )
 echo.
 

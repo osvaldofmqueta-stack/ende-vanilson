@@ -20,21 +20,17 @@ class ContadorForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['cliente'].queryset = Cliente.objects.filter(tipo_cliente='PRE_PAGO')
-        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago...'
-        self.fields['numero_cartao'].required = True
+        self.fields['cliente'].queryset = Cliente.objects.filter(status='ATIVO').order_by('nome')
+        self.fields['cliente'].empty_label = 'Selecionar cliente pré-pago ou pós-pago...'
+        self.fields['numero_cartao'].required = False
 
     def clean_cliente(self):
-        cliente = self.cleaned_data.get('cliente')
-        if cliente and cliente.tipo_cliente != 'PRE_PAGO':
-            raise forms.ValidationError(
-                f'O cliente "{cliente.nome}" é pós-pago. Apenas clientes pré-pagos podem ser associados a contadores.'
-            )
-        return cliente
+        return self.cleaned_data.get('cliente')
 
     def clean(self):
         cleaned_data = super().clean()
+        cliente = cleaned_data.get('cliente')
         numero_cartao = cleaned_data.get('numero_cartao')
-        if not numero_cartao:
-            self.add_error('numero_cartao', 'O número do cartão é obrigatório para contadores pré-pagos.')
+        if cliente and cliente.tipo_cliente == 'PRE_PAGO' and not numero_cartao:
+            self.add_error('numero_cartao', 'Informe o número do cartão para um contador pré-pago.')
         return cleaned_data

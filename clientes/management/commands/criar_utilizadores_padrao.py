@@ -1,5 +1,7 @@
 import getpass
 import os
+import secrets
+import string
 from pathlib import Path
 
 from django.contrib.auth.models import User
@@ -16,7 +18,7 @@ UTILIZADORES = [
 
 
 class Command(BaseCommand):
-    help = 'Cria utilizadores padrão sem definir palavras-passe públicas'
+    help = 'Cria utilizadores padrão e permite gerar palavras-passe automaticamente'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -27,6 +29,11 @@ class Command(BaseCommand):
         parser.add_argument(
             '--credentials-file',
             help='Ficheiro temporário onde será escrito o resumo das credenciais',
+        )
+        parser.add_argument(
+            '--auto-passwords',
+            action='store_true',
+            help='Gera palavras-passe aleatórias quando não forem fornecidas por ambiente',
         )
 
     def handle(self, *args, **options):
@@ -48,7 +55,10 @@ class Command(BaseCommand):
                 )
                 continue
 
-            password = self._get_password(utilizador['username'])
+            password = self._get_password(
+                utilizador['username'],
+                auto_passwords=options['auto_passwords'],
+            )
             if user:
                 user.set_password(password)
                 user.email = utilizador['email']
@@ -85,11 +95,15 @@ class Command(BaseCommand):
         if options['credentials_file']:
             self._write_credentials_file(options['credentials_file'], credenciais)
 
-    def _get_password(self, username):
+    def _get_password(self, username, auto_passwords=False):
         env_name = f"{username.upper()}_PASSWORD"
         password = os.environ.get(env_name)
         if password:
             return password
+
+        if auto_passwords:
+            alphabet = string.ascii_letters + string.digits + '!@#$%*-_'
+            return ''.join(secrets.choice(alphabet) for _ in range(20))
 
         if not os.isatty(0):
             raise CommandError(

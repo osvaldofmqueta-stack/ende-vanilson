@@ -130,7 +130,8 @@
     <aside class="sidebar is-authenticated" id="sidebar">
         <div class="sidebar-header">
             <a href="{% url 'dashboard' %}" style="text-decoration: none;">
-                <h4>⚡ ENERGIA</h4>
+                <h4>ENERGIA</h4>
+                <small class="text-uppercase" style="color: var(--text-muted); letter-spacing: .12em;">Gestão e pagamentos</small>
             </a>
         </div>
         
@@ -154,7 +155,12 @@
                 </li>
                 <li class="nav-item-side">
                     <a href="{% url 'fatura_list' %}" class="nav-link-side {% if 'fatura' in request.path %}active{% endif %}">
-                        📄 Faturas
+                        📄 Faturas pós-pagas
+                    </a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'recarga_list' %}" class="nav-link-side {% if 'recarga' in request.path %}active{% endif %}">
+                        💳 Recargas pré-pagas
                     </a>
                 </li>
                 <li class="nav-item-side">
@@ -186,6 +192,9 @@
             {% else %}
                 <li class="nav-item-side">
                     <a href="{% url 'fatura_list' %}" class="nav-link-side">📄 Minhas Faturas</a>
+                </li>
+                <li class="nav-item-side">
+                    <a href="{% url 'recarga_list' %}" class="nav-link-side">💳 Minhas Recargas</a>
                 </li>
                 <li class="nav-item-side">
                     <a href="{% url 'contador_list' %}" class="nav-link-side">📟 Meus Contadores</a>
@@ -233,8 +242,8 @@
             <div class="d-flex align-items-center">
                 <button class="btn d-lg-none me-2" id="sidebarToggle">☰</button>
                 <div class="d-flex flex-column">
-                    <h5 class="mb-0 fw-bold">Olá, {{ user.username }}</h5>
-                    <small class="text-muted" id="realTimeClock"></small>
+                    <h5 class="mb-0 fw-bold">Central de controlo</h5>
+                    <small class="text-muted" id="realTimeClock">Olá, {{ user.username }}</small>
                 </div>
             </div>
             <div class="d-flex gap-2">

@@ -101,8 +101,13 @@ echo -e "  ${GREEN}[OK]${NC} Base de dados configurada."
 # ---- Utilizadores padrao ----
 echo ""
 echo "  [4/5] A configurar utilizadores..."
-echo "  As palavras-passe serao solicitadas de forma segura."
-python manage.py criar_utilizadores_padrao
+echo "  A gerar palavras-passe seguras automaticamente."
+python manage.py criar_utilizadores_padrao --reset-existing --auto-passwords --credentials-file "$PWD/CREDENCIAIS_ACESSO.txt"
+if [ $? -ne 0 ]; then
+    echo -e "  ${RED}[ERRO]${NC} Falha ao configurar os utilizadores."
+    exit 1
+fi
+chmod 600 "$PWD/CREDENCIAIS_ACESSO.txt"
 
 # ---- Ficheiros estaticos ----
 echo ""
@@ -115,7 +120,7 @@ echo "  ============================================================="
 echo -e "  ${GREEN}  INSTALACAO CONCLUIDA COM SUCESSO!${NC}"
 echo "  ============================================================="
 echo ""
-echo "   Utilize as palavras-passe definidas no passo 4 para iniciar sessao."
+echo "   Credenciais guardadas em: CREDENCIAIS_ACESSO.txt"
 echo ""
 echo "   Endereco local: http://localhost:8000"
 echo "   Para parar o servidor: pressione Ctrl+C"

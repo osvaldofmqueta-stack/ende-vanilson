@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('recargas/', views.recarga_list, name='recarga_list'),
+    path('recargas/nova/', views.recarga_create, name='recarga_create'),
     path('faturas/', views.fatura_list, name='fatura_list'),
     path('faturas/<int:pk>/', views.fatura_detail, name='fatura_detail'),
     path('faturas/<int:pk>/pdf/', views.fatura_pdf, name='fatura_pdf'),

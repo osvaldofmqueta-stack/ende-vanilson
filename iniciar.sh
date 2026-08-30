@@ -22,13 +22,14 @@ source venv/bin/activate
 if [ ! -f "db.sqlite3" ]; then
     echo "  [AVISO] Base de dados nao encontrada. A criar..."
     python manage.py migrate >/dev/null 2>&1
-    python manage.py criar_utilizadores_padrao
+    python manage.py criar_utilizadores_padrao --auto-passwords --credentials-file "$PWD/CREDENCIAIS_ACESSO.txt"
+    chmod 600 "$PWD/CREDENCIAIS_ACESSO.txt"
 fi
 
 echo "   Endereco: http://localhost:8000"
 echo "   Para parar: Ctrl+C"
 echo ""
-echo "   Utilize as palavras-passe definidas durante a instalacao."
+echo "   Consulte CREDENCIAIS_ACESSO.txt na pasta da aplicacao."
 echo ""
 
 (sleep 2 && (

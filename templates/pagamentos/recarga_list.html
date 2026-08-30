@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 mt-2">
+    <div>
+        <span class="text-uppercase small fw-bold text-primary">Controlo de pagamentos</span>
+        <h2 class="fw-bold mb-1">Recargas pré-pagas</h2>
+        <p class="text-muted mb-0">Registe pagamentos e acompanhe o saldo disponibilizado aos clientes.</p>
+    </div>
+    {% if user.perfil.tipo_usuario != 'CLIENTE' %}
+        <a href="{% url 'recarga_create' %}" class="btn btn-primary rounded-pill px-4">Nova recarga</a>
+    {% endif %}
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100"><div class="card-body">
+            <div class="small text-muted text-uppercase fw-semibold">Total confirmado</div>
+            <div class="fs-3 fw-bold text-primary mt-2">{{ total_confirmado|floatformat:2 }} Kz</div>
+        </div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100"><div class="card-body">
+            <div class="small text-muted text-uppercase fw-semibold">Operações registadas</div>
+            <div class="fs-3 fw-bold mt-2">{{ recargas|length }}</div>
+        </div></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100"><div class="card-body">
+            <div class="small text-muted text-uppercase fw-semibold">Modelo</div>
+            <div class="fs-5 fw-bold text-success mt-2">Saldo por consumo</div>
+        </div></div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0 fw-bold">Histórico de recargas</h5>
+        <span class="badge bg-primary-subtle text-primary rounded-pill">Pré-pago</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr><th class="ps-4">Número</th><th>Cliente</th><th>Valor</th><th>Método</th><th>Data</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for recarga in recargas %}
+                <tr>
+                    <td class="ps-4 fw-semibold text-primary">{{ recarga.numero_recarga }}</td>
+                    <td>{{ recarga.cliente.nome }}<div class="small text-muted">{{ recarga.cliente.numero_cliente }}</div></td>
+                    <td class="fw-bold">{{ recarga.valor|floatformat:2 }} Kz</td>
+                    <td>{{ recarga.get_metodo_pagamento_display }}</td>
+                    <td>{{ recarga.data_recarga|date:"d/m/Y H:i" }}</td>
+                    <td><span class="badge rounded-pill {% if recarga.status == 'CONFIRMADO' %}bg-success{% elif recarga.status == 'PENDENTE' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">{{ recarga.get_status_display }}</span></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center py-5 text-muted">Nenhuma recarga registada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

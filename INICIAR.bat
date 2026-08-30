@@ -23,7 +23,7 @@ if not exist "db.sqlite3" (
     echo  [AVISO] Base de dados nao encontrada. A executar migracao...
     call venv\Scripts\activate.bat
     python manage.py migrate >nul 2>&1
-    python manage.py criar_utilizadores_padrao
+    python manage.py criar_utilizadores_padrao --auto-passwords --credentials-file "%~dp0CREDENCIAIS_ACESSO.txt"
 )
 
 call venv\Scripts\activate.bat
@@ -34,7 +34,7 @@ echo    Local:     http://localhost:8000
 echo    Na rede:   http://%COMPUTERNAME%:8000
 echo   ----------------------------------------------------------
 echo.
-echo   Utilize as palavras-passe definidas durante a instalacao.
+echo   Consulte CREDENCIAIS_ACESSO.txt na pasta da aplicacao.
 echo.
 echo   Para parar o servidor: pressione Ctrl+C
 echo.

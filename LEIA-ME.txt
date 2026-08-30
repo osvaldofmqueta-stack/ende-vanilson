@@ -34,10 +34,11 @@ REQUISITO UNICO: Python 3.8 ou superior
   UTILIZADORES E SEGURANCA
 ================================================================
 
-  Durante a instalacao, o sistema solicita as palavras-passe
-  dos utilizadores admin, financeiro e operador.
-  No final da instalacao, as credenciais efetivamente configuradas
-  sao exibidas no ecra. Guarde-as num local seguro.
+  Durante a instalacao, o sistema gera automaticamente palavras-passe
+  seguras para admin, financeiro e operador.
+  As credenciais ficam guardadas em:
+    CREDENCIAIS_ACESSO.txt
+  Guarde este ficheiro num local seguro e nao o envie para o GitHub.
 
   Nota: O Financeiro e o Operador NAO tem acesso ao painel
         de administracao Django (/admin/), apenas ao sistema.
