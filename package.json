@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "uv run --project . python manage.py migrate --noinput && uv run --project . python manage.py runserver 0.0.0.0:${PORT}",
+    "dev": "python3.11 manage.py migrate --noinput && python3.11 manage.py runserver 0.0.0.0:${PORT}",
     "build": "uv run --project . python manage.py collectstatic --noinput",
     "serve": "uv run --project . gunicorn --bind 0.0.0.0:${PORT} energia_gestao.wsgi:application",
     "typecheck": "uv run --project . python manage.py check"
