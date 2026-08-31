@@ -18,6 +18,13 @@ if not exist "venv\" (
     exit /b 1
 )
 
+if not exist "find_free_port.py" (
+    echo  [ERRO] find_free_port.py nao foi encontrado.
+    echo  Confirme que o projeto foi extraido completamente.
+    pause
+    exit /b 1
+)
+
 :: Verificar base de dados
 if not exist "db.sqlite3" (
     echo  [AVISO] Base de dados nao encontrada. A executar migracao...
@@ -28,10 +35,20 @@ if not exist "db.sqlite3" (
 
 call venv\Scripts\activate.bat
 
+:: Escolher automaticamente uma porta web livre
+set "PORT="
+for /f "delims=" %%p in ('python find_free_port.py 2^>nul') do set "PORT=%%p"
+if not defined PORT (
+    echo  [ERRO] Nao foi encontrada uma porta livre entre 8000 e 8999.
+    echo  Feche algum servidor ou programa local e tente novamente.
+    pause
+    exit /b 1
+)
+
 echo   Enderecos de acesso:
 echo   ----------------------------------------------------------
-echo    Local:     http://localhost:8000
-echo    Na rede:   http://%COMPUTERNAME%:8000
+echo    Local:     http://localhost:%PORT%
+echo    Na rede:   http://%COMPUTERNAME%:%PORT%
 echo   ----------------------------------------------------------
 echo.
 echo   Consulte CREDENCIAIS_ACESSO.txt na pasta da aplicacao.
@@ -42,9 +59,9 @@ echo  ===============================================================
 echo.
 
 :: Abrir navegador automaticamente
-start /b cmd /c "timeout /t 2 >nul & start http://localhost:8000"
+start /b cmd /c "timeout /t 2 >nul & start http://localhost:%PORT%"
 
 :: Iniciar servidor
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:%PORT%
 
 pause

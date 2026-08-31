@@ -52,7 +52,7 @@ Sistema completo de gestão de energia desenvolvido com Python Django para geren
 
 ### ✅ Infraestrutura
 - Base de dados PostgreSQL configurada através das variáveis de ambiente geridas pelo projeto
-- Workflow Django configurado para a porta 5000
+- Workflow Django configurado para a porta 5000; o instalador Windows escolhe automaticamente uma porta local livre entre 8000 e 8999
 - Sistema de migração de base de dados
 - Configuração de ficheiros estáticos e media
 

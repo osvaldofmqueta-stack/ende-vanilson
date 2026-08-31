@@ -24,6 +24,7 @@ echo.
 
 if not exist "manage.py" goto project_not_found
 if not exist "requirements.txt" goto requirements_not_found
+if not exist "find_free_port.py" goto port_script_not_found
 
 :: ---- Ambiente virtual ----
 echo  [1/5] A verificar ambiente virtual...
@@ -63,6 +64,14 @@ echo  [3/5] A configurar base de dados...
 if errorlevel 1 goto database_error
 echo  [OK] Base de dados configurada.
 
+:: ---- Escolher porta web livre ----
+echo.
+echo  A procurar uma porta web livre...
+set "PORT="
+for /f "delims=" %%p in ('"%PYTHON%" find_free_port.py 2^>nul') do set "PORT=%%p"
+if not defined PORT goto port_error
+echo  [OK] Porta web selecionada: %PORT%
+
 :: ---- Utilizadores ----
 echo.
 echo  [4/5] A configurar utilizadores...
@@ -85,7 +94,7 @@ echo  ===============================================================
 echo.
 echo   O sistema vai abrir no navegador em alguns segundos...
 echo.
-echo   Endereco local: http://localhost:8000
+echo   Endereco local: http://localhost:%PORT%
 echo   As palavras-passe foram definidas durante a configuracao.
 echo   Para parar o servidor: pressione Ctrl+C
 echo.
@@ -93,10 +102,10 @@ echo  ===============================================================
 echo.
 
 :: Abrir navegador apos 3 segundos
-start "" /b cmd /c "timeout /t 3 /nobreak >nul & start "" http://localhost:8000"
+start "" /b cmd /c "timeout /t 3 /nobreak >nul & start "" http://localhost:%PORT%"
 
 :: Iniciar servidor
-"%PYTHON%" manage.py runserver 0.0.0.0:8000
+"%PYTHON%" manage.py runserver 0.0.0.0:%PORT%
 set "EXIT_CODE=%errorlevel%"
 endlocal & exit /b %EXIT_CODE%
 
@@ -137,6 +146,11 @@ echo  [ERRO] requirements.txt nao foi encontrado.
 echo  Confirme que o projeto foi extraido completamente.
 goto fail
 
+:port_script_not_found
+echo  [ERRO] find_free_port.py nao foi encontrado.
+echo  Confirme que o projeto foi extraido completamente.
+goto fail
+
 :venv_error
 echo  [ERRO] Nao foi possivel criar o ambiente virtual.
 goto fail
@@ -154,6 +168,11 @@ goto fail
 
 :database_error
 echo  [ERRO] Falha ao configurar a base de dados.
+goto fail
+
+:port_error
+echo  [ERRO] Nao foi encontrada uma porta livre entre 8000 e 8999.
+echo  Feche algum servidor ou programa local e tente novamente.
 goto fail
 
 :users_error
