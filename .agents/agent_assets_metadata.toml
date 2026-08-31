@@ -147,3 +147,17 @@ mtime_ms = 1788093845291
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/98c234fa-617b-453e-949c-cd96616a5c87/44efeb13-8c66-42b1-80be-806f7b3e06ef"
 storage_version_token = "1788093850896118"
 content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+
+[[outputs]]
+id = "7HjDzkWOeTAdLyZ_bQgTO"
+uri = "file://outputs/apresentacao_defesa_ende_2026.pptx"
+type = "slides"
+title = "Apresentação da defesa — ENDE 2026"
+description = "PowerPoint com 12 slides para a defesa da monografia sobre o sistema de gestão de energia pré-paga e pós-paga da ENDE Central."
+logical_id = "7aabf7cd-6c25-4468-bb4a-0734fbdb42d0"
+content_hash = "sha256:d976f81d5524a07b4c9ff522c3510a45411be5390d30ca6a304e27949067f183"
+size = 57162
+mtime_ms = 1788147045267
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/7aabf7cd-6c25-4468-bb4a-0734fbdb42d0/ada8a4f6-3caa-4682-8c3a-34ce863eeb27"
+storage_version_token = "1788147075214604"
+content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"

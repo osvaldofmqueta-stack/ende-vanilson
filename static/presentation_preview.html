@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apresentação da defesa — ENDE</title>
+<style>
+:root { --navy:#0B1F33; --navy2:#102D47; --teal:#16B8A6; --mint:#B8F1E7; --yellow:#F4C95D; --muted:#B8C7D5; --blue:#2F76FF; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; background:#071522; color:#F7FAFC; font-family:Inter,Segoe UI,Arial,sans-serif; display:grid; place-items:center; overflow:hidden; }
+.deck { width:min(94vw,1200px); aspect-ratio:16/9; position:relative; border-radius:18px; overflow:hidden; box-shadow:0 24px 80px #0008; }
+.slide { display:none; position:absolute; inset:0; padding:6.5% 7%; background:var(--navy); overflow:hidden; }
+.slide.active { display:block; }
+.slide:after { content:""; position:absolute; right:-12%; top:-25%; width:48%; height:150%; background:var(--navy2); transform:rotate(8deg); opacity:.9; }
+.slide-number { position:absolute; right:6%; top:7%; color:var(--muted); font-weight:700; font-size:clamp(10px,1.3vw,16px); z-index:2; }
+.accent { height:3px; width:92%; background:var(--teal); position:absolute; top:21%; left:7%; z-index:2; }
+.kicker { color:var(--teal); font-weight:800; letter-spacing:.14em; font-size:clamp(9px,1.25vw,15px); position:relative; z-index:2; }
+h1 { font-size:clamp(24px,4vw,56px); line-height:1.05; max-width:74%; margin:4% 0 2%; position:relative; z-index:2; }
+.subtitle { color:var(--mint); font-size:clamp(13px,1.7vw,23px); max-width:64%; position:relative; z-index:2; }
+.visual { position:absolute; right:9%; top:34%; width:27%; height:32%; display:flex; flex-direction:column; gap:10%; z-index:2; }
+.visual span { display:block; height:22%; border-radius:10px; background:var(--teal); opacity:.9; }
+.visual span:nth-child(2) { width:78%; background:var(--yellow); }
+.visual span:nth-child(3) { width:56%; background:var(--blue); }
+.visual-4 span:nth-child(1),.visual-8 span:nth-child(1) { background:var(--blue); }
+.visual-5 span:nth-child(2),.visual-9 span:nth-child(2) { background:var(--mint); }
+.visual-10 span:nth-child(3),.visual-11 span:nth-child(3) { background:var(--yellow); }
+.meta { position:absolute; bottom:5%; left:7%; color:var(--muted); font-size:clamp(9px,1.1vw,14px); z-index:2; }
+.meta em { position:absolute; left:clamp(190px,55vw,700px); width:180px; font-style:normal; text-align:right; }
+.controls { position:absolute; bottom:2.5%; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:5; }
+button { border:1px solid #ffffff33; background:#ffffff18; color:white; border-radius:999px; padding:7px 14px; cursor:pointer; }
+button:hover { background:var(--teal); color:var(--navy); }
+.counter { position:absolute; right:3%; bottom:3%; color:#ffffff99; font-size:12px; z-index:5; }
+@media(max-width:700px) { .slide { padding:8% 8%; } .accent { top:24%; } .visual { opacity:.55; right:4%; width:34%; } h1 { max-width:90%; } .subtitle { max-width:84%; } .meta em { display:none; } }
+</style>
+</head>
+<body>
+<div class="deck" aria-label="Prévia da apresentação">
+  
+            <section class="slide active" data-index="0">
+              <div class="slide-number">01</div>
+              <div class="accent"></div>
+              <div class="kicker">CAPA</div>
+              <h1>Sistema de Gestão de Energia Pré-paga e Pós-paga</h1>
+              <p class="subtitle">ENDE Central • Defesa 2026</p>
+              <div class="visual visual-1">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="1">
+              <div class="slide-number">02</div>
+              <div class="accent"></div>
+              <div class="kicker">O DESAFIO</div>
+              <h1>Processos dispersos, controlo manual e visibilidade limitada.</h1>
+              <p class="subtitle">Contexto do atendimento</p>
+              <div class="visual visual-2">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="2">
+              <div class="slide-number">03</div>
+              <div class="accent"></div>
+              <div class="kicker">OBJETIVO</div>
+              <h1>Organizar dados e apoiar a gestão de energia pré-paga e pós-paga.</h1>
+              <p class="subtitle">Pergunta de partida</p>
+              <div class="visual visual-3">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="3">
+              <div class="slide-number">04</div>
+              <div class="accent"></div>
+              <div class="kicker">METODOLOGIA</div>
+              <h1>Explorar → compreender → modelar → construir → verificar.</h1>
+              <p class="subtitle">Entrevistas com dados parciais</p>
+              <div class="visual visual-4">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="4">
+              <div class="slide-number">05</div>
+              <div class="accent"></div>
+              <div class="kicker">UTILIZADORES</div>
+              <h1>Administrador • Operador • Financeiro • Cliente</h1>
+              <p class="subtitle">Perfis oficiais</p>
+              <div class="visual visual-5">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="5">
+              <div class="slide-number">06</div>
+              <div class="accent"></div>
+              <div class="kicker">MVP</div>
+              <h1>Cadastro • medição • financeiro • análise</h1>
+              <p class="subtitle">Recibos e notificações modelados, ainda parciais</p>
+              <div class="visual visual-6">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="6">
+              <div class="slide-number">07</div>
+              <div class="accent"></div>
+              <div class="kicker">SOLUÇÃO</div>
+              <h1>Django + PostgreSQL + Bootstrap + relatórios</h1>
+              <p class="subtitle">Arquitetura tecnológica</p>
+              <div class="visual visual-7">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="7">
+              <div class="slide-number">08</div>
+              <div class="accent"></div>
+              <div class="kicker">MODELO</div>
+              <h1>Cliente → contador → recarga/fatura → pagamento</h1>
+              <p class="subtitle">Informação ligada</p>
+              <div class="visual visual-8">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="8">
+              <div class="slide-number">09</div>
+              <div class="accent"></div>
+              <div class="kicker">DEMONSTRAÇÃO</div>
+              <h1>Cadastrar → medir → registar → acompanhar</h1>
+              <p class="subtitle">Dados simulados</p>
+              <div class="visual visual-9">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="9">
+              <div class="slide-number">10</div>
+              <div class="accent"></div>
+              <div class="kicker">RESULTADOS</div>
+              <h1>Centralização, cálculos apoiados e relatórios úteis.</h1>
+              <p class="subtitle">Avaliação funcional</p>
+              <div class="visual visual-10">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="10">
+              <div class="slide-number">11</div>
+              <div class="accent"></div>
+              <div class="kicker">LIMITAÇÕES</div>
+              <h1>Integrações, notificações, permissões, testes e automação.</h1>
+              <p class="subtitle">Próximos passos</p>
+              <div class="visual visual-11">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+            <section class="slide " data-index="11">
+              <div class="slide-number">12</div>
+              <div class="accent"></div>
+              <div class="kicker">CONCLUSÃO</div>
+              <h1>Uma base integrada para um atendimento mais organizado.</h1>
+              <p class="subtitle">Obrigado • Perguntas</p>
+              <div class="visual visual-12">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="meta">Defesa de monografia <b>•</b> 2026 <em>ENDE Central</em></div>
+            </section>
+            
+  <div class="controls"><button id="prev">Anterior</button><button id="next">Seguinte</button></div>
+  <div class="counter" id="counter">01 / 12</div>
+</div>
+<script>
+const slides=[...document.querySelectorAll('.slide')]; let current=0;
+function show(n) { current=(n+slides.length)%slides.length; slides.forEach((s,i)=>s.classList.toggle('active',i===current)); document.querySelector('#counter').textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0'); }
+document.querySelector('#prev').onclick=()=>show(current-1); document.querySelector('#next').onclick=()=>show(current+1);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')show(current+1);if(e.key==='ArrowLeft')show(current-1);});
+</script>
+</body></html>
