@@ -2,3 +2,4 @@
 - [Bootstrap credentials](bootstrap-credentials.md) — setup must collect operator passwords interactively or from secrets, never publish defaults.
 - [Replit workflow ports](replit-workflow-ports.md) — Django webview workflows need an explicit 5000 port because `${PORT}` may not expand.
 - [DOCX text replacement](docx-text-replacement.md) — Word paragraphs may split visible text across runs, so replacements must operate on the paragraph text rather than one run.
+- [Local database fallback](local-database-fallback.md) — use managed PostgreSQL on Replit and an explicit SQLite fallback for local installs without PG variables.
