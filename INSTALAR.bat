@@ -2,6 +2,8 @@
 setlocal EnableExtensions
 chcp 65001 >nul
 cd /d "%~dp0"
+set "LOGFILE=%~dp0instalacao.log"
+> "%LOGFILE%" echo Inicio da instalacao em %date% %time%
 cls
 color 0B
 
@@ -18,6 +20,14 @@ where py >nul 2>&1
 if not errorlevel 1 (
     py -3.11 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
     if not errorlevel 1 set "PYTHON_CMD=py -3.11"
+)
+
+if not defined PYTHON_CMD (
+    where py >nul 2>&1
+    if not errorlevel 1 (
+        py -3 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
+        if not errorlevel 1 set "PYTHON_CMD=py -3"
+    )
 )
 
 if not defined PYTHON_CMD (
@@ -44,7 +54,7 @@ if exist "venv\Scripts\python.exe" (
     echo  [OK] Ambiente virtual ja existe.
 ) else (
     echo  [INFO] A criar ambiente virtual...
-    %PYTHON_CMD% -m venv venv
+    %PYTHON_CMD% -m venv venv 2>>"%LOGFILE%"
     if errorlevel 1 goto venv_error
     echo  [OK] Ambiente virtual criado.
 )
@@ -52,13 +62,13 @@ set "PYTHON=venv\Scripts\python.exe"
 if not exist "%PYTHON%" goto venv_error
 
 :: Confirmar que o ambiente virtual tem pip disponível.
-"%PYTHON%" -m pip --version >nul 2>&1
+"%PYTHON%" -m pip --version >nul 2>>"%LOGFILE%"
 if errorlevel 1 goto pip_error
 
 :: ---- Verificar e instalar dependencias ----
 echo.
 echo  [2/5] A verificar dependencias...
-"%PYTHON%" -c "import django" >nul 2>&1
+"%PYTHON%" -c "import django" >nul 2>>"%LOGFILE%"
 if not errorlevel 1 (
     echo  [OK] Django ja esta instalado.
 ) else (
@@ -77,7 +87,7 @@ echo  [OK] Dependencias verificadas.
 :: ---- Base de dados ----
 echo.
 echo  [3/5] A configurar base de dados...
-"%PYTHON%" manage.py migrate --run-syncdb
+"%PYTHON%" manage.py migrate --run-syncdb 2>>"%LOGFILE%"
 if errorlevel 1 goto database_error
 echo  [OK] Base de dados configurada.
 
@@ -94,13 +104,13 @@ echo.
 echo  [4/5] A configurar utilizadores...
 echo  Numa instalacao nova, defina as palavras-passe quando solicitado.
 echo  Numa reinstalacao, as palavras-passe existentes serao mantidas.
-"%PYTHON%" manage.py criar_utilizadores_padrao
+"%PYTHON%" manage.py criar_utilizadores_padrao 2>>"%LOGFILE%"
 if errorlevel 1 goto users_error
 
 :: ---- Ficheiros estaticos ----
 echo.
 echo  [5/5] A preparar ficheiros estaticos...
-"%PYTHON%" manage.py collectstatic --noinput --clear
+"%PYTHON%" manage.py collectstatic --noinput --clear 2>>"%LOGFILE%"
 if errorlevel 1 goto static_error
     echo  [OK] Instalacao completa!
 
@@ -122,8 +132,15 @@ echo.
 start "" /b cmd /c "timeout /t 3 /nobreak >nul & start "" http://localhost:%PORT%"
 
 :: Iniciar servidor
-"%PYTHON%" manage.py runserver 0.0.0.0:%PORT%
+"%PYTHON%" manage.py runserver 0.0.0.0:%PORT% 2>>"%LOGFILE%"
 set "EXIT_CODE=%errorlevel%"
+if not "%EXIT_CODE%"=="0" (
+    echo.
+    echo  [ERRO] O servidor terminou com o codigo %EXIT_CODE%.
+    echo  Consulte o ficheiro instalacao.log para ver os detalhes.
+    echo.
+    pause
+)
 endlocal & exit /b %EXIT_CODE%
 
 :install_dependencies
@@ -131,7 +148,7 @@ set "ATTEMPT=1"
 :install_dependencies_attempt
 echo.
 echo  [INFO] Tentativa %ATTEMPT% de 3. O download pode demorar alguns minutos...
-"%PYTHON%" -m pip install -r requirements.txt --prefer-binary --retries 8 --timeout 180 --disable-pip-version-check
+"%PYTHON%" -m pip install -r requirements.txt --prefer-binary --retries 8 --timeout 180 --disable-pip-version-check 2>>"%LOGFILE%"
 if not errorlevel 1 exit /b 0
 if %ATTEMPT% GEQ 3 exit /b 1
 set /a ATTEMPT+=1
@@ -210,5 +227,7 @@ goto fail
 echo.
 echo  A instalacao nao foi concluida. Corrija o problema indicado e execute
 echo  INSTALAR.bat novamente.
+echo  Os detalhes tecnicos foram guardados em:
+echo  %LOGFILE%
 pause
 endlocal & exit /b 1
