@@ -189,3 +189,17 @@ mtime_ms = 1788266155225
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:f695ede4-030a-4d40-bb8e-409f404de1b1/da60cc85-81bc-48b2-8b22-cbbc63d65430/3a18fe2a-5c10-45ba-b36a-472ed5da4f0b"
 storage_version_token = "1788266175720329"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "SvbBSdWygi2kCaC1FCrk9"
+uri = "file://sistema_gestao_energia_sqlite_final.zip"
+type = "unspecified"
+title = "Sistema de Gestão de Energia — instalador final"
+description = "Pacote final. O instalador testa realmente o Python 3.11+, tenta instalar o runtime com py install 3.11 quando necessário, suporta nomes de utilizador com espaços e usa formato Windows CRLF."
+logical_id = "d42b7478-7c6d-4162-bf97-841a908b6a4b"
+content_hash = "sha256:45890308269cc07a3f67f3fcddd571286c6da499a8274cc427eac7b8ad80db5b"
+size = 63649969
+mtime_ms = 1788266897436
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:f695ede4-030a-4d40-bb8e-409f404de1b1/d42b7478-7c6d-4162-bf97-841a908b6a4b/457d942c-2908-4e02-976c-154b88fcf204"
+storage_version_token = "1788266914978848"
+content_type = "application/octet-stream"
