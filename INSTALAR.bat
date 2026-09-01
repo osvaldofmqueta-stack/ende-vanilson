@@ -28,6 +28,14 @@ set "PYVER="
 call :try_python "py -3.11"
 if not defined PYTHON_CMD call :try_python "py -3"
 if not defined PYTHON_CMD call :try_python "python"
+if not defined PYTHON_CMD (
+    where py >nul 2>&1
+    if not errorlevel 1 (
+        echo  [INFO] Python 3.11 nao esta instalado. A tentar instalar com o launcher...
+        py install 3.11 >>"%LOGFILE%" 2>&1
+        call :try_python "py -3.11"
+    )
+)
 if not defined PYTHON_CMD goto python_not_found
 
 echo  [OK] %PYVER% encontrado.
@@ -151,7 +159,19 @@ set "CANDIDATE=%~1"
 set "CANDIDATE_VERSION="
 %CANDIDATE% -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
 if errorlevel 1 exit /b 1
-for /f "delims=" %%v in ('%CANDIDATE% --version 2^>^&1') do if not defined CANDIDATE_VERSION set "CANDIDATE_VERSION=%%v"
+set "PYTHON_PROBE=%TEMP%\energia_python_probe_%RANDOM%.txt"
+%CANDIDATE% -c "import sys; print('ENERGIA_PYTHON_OK Python ' + '.'.join(map(str, sys.version_info[:3])))" >"%PYTHON_PROBE%" 2>nul
+if errorlevel 1 (
+    del /q "%PYTHON_PROBE%" >nul 2>&1
+    exit /b 1
+)
+findstr /b /c:"ENERGIA_PYTHON_OK Python 3." "%PYTHON_PROBE%" >nul 2>&1
+if errorlevel 1 (
+    del /q "%PYTHON_PROBE%" >nul 2>&1
+    exit /b 1
+)
+for /f "usebackq tokens=1,*" %%a in ("%PYTHON_PROBE%") do if not defined CANDIDATE_VERSION set "CANDIDATE_VERSION=%%b"
+del /q "%PYTHON_PROBE%" >nul 2>&1
 if not defined CANDIDATE_VERSION exit /b 1
 set "PYTHON_CMD=%CANDIDATE%"
 set "PYVER=%CANDIDATE_VERSION%"
