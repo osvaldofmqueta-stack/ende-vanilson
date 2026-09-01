@@ -175,3 +175,17 @@ mtime_ms = 1788266097612
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:f695ede4-030a-4d40-bb8e-409f404de1b1/130c6d56-dc51-4081-8cfa-ad0297649638/514049ce-2469-4272-be31-c61d3f5e6375"
 storage_version_token = "1788266110058022"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "qE1gGxTE60h40M9UfuXn6"
+uri = "file://sistema_gestao_energia_sqlite_corrigido.zip"
+type = "unspecified"
+title = "Sistema de Gestão de Energia — pacote corrigido"
+description = "Use este ZIP novo, com nome diferente dos anteriores. O INSTALAR.bat mostra VERSAO CORRIGIDA, testa realmente o Python 3.11+, rejeita o atalho da Microsoft Store e usa formato Windows."
+logical_id = "da60cc85-81bc-48b2-8b22-cbbc63d65430"
+content_hash = "sha256:5f8da3aa35e1e358f42eb748aa52f6ebc8f01ef51fdd02fba465de657d469a6c"
+size = 63502350
+mtime_ms = 1788266155225
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:f695ede4-030a-4d40-bb8e-409f404de1b1/da60cc85-81bc-48b2-8b22-cbbc63d65430/3a18fe2a-5c10-45ba-b36a-472ed5da4f0b"
+storage_version_token = "1788266175720329"
+content_type = "application/octet-stream"
