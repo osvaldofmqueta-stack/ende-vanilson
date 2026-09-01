@@ -161,3 +161,17 @@ mtime_ms = 1788147045267
 storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:09e88dd7-d8d7-42fe-bc37-f9aa368aabe3/7aabf7cd-6c25-4468-bb4a-0734fbdb42d0/ada8a4f6-3caa-4682-8c3a-34ce863eeb27"
 storage_version_token = "1788147075214604"
 content_type = "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+
+[[outputs]]
+id = "MJDzV_DZFJa8z24bI0lHy"
+uri = "file://sistema_gestao_energia_sqlite.zip"
+type = "unspecified"
+title = "Sistema de Gestão de Energia — versão SQLite"
+description = "Pacote atualizado para instalação em Windows. Inclui INSTALAR.bat e INICIAR.bat corrigidos, configuração SQLite, migrações, templates e ficheiros estáticos. Não inclui venv, caches, credenciais ou db.sqlite3."
+logical_id = "130c6d56-dc51-4081-8cfa-ad0297649638"
+content_hash = "sha256:a96151c7c7c453d89e4a3fa33296d5db71506c83284b447cf35cd4804c5724ea"
+size = 63357148
+mtime_ms = 1788258334822
+storage_uri = "gcs://replit-rams-assets-reed/rams/assets/repl:f695ede4-030a-4d40-bb8e-409f404de1b1/130c6d56-dc51-4081-8cfa-ad0297649638/8969e2a5-cf2b-47f5-96bd-d8e4a4b31b8d"
+storage_version_token = "1788258341930900"
+content_type = "application/octet-stream"
