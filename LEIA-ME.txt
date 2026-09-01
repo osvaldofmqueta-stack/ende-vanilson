@@ -63,6 +63,7 @@
 
   INSTALAR.bat          -> Instalador (Windows)
   INICIAR.bat           -> Iniciar sistema (Windows)
+  instalacao.log        -> Detalhes se o instalador encontrar um erro
   instalar.sh           -> Instalador (Linux/Mac)
   iniciar.sh            -> Iniciar sistema (Linux/Mac)
   manage.py             -> Script principal Django
