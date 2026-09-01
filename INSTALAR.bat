@@ -18,37 +18,19 @@ echo.
 echo  ===============================================================
 echo    SISTEMA DE GESTAO DE ENERGIA  -  INSTALADOR AUTOMATICO
 echo  ===============================================================
+echo    VERSAO CORRIGIDA - DETECAO REAL DO PYTHON
 echo.
 
 :: ---- Verificar Python ----
-:: Preferir o launcher oficial do Windows quando existir.
+:: Testar o Python de verdade, evitando o atalho da Microsoft Store.
 set "PYTHON_CMD="
-where py >nul 2>&1
-if not errorlevel 1 (
-    py -3.11 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
-    if not errorlevel 1 set "PYTHON_CMD=py -3.11"
-)
-
-if not defined PYTHON_CMD (
-    where py >nul 2>&1
-    if not errorlevel 1 (
-        py -3 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
-        if not errorlevel 1 set "PYTHON_CMD=py -3"
-    )
-)
-
-if not defined PYTHON_CMD (
-    where python >nul 2>&1
-    if not errorlevel 1 (
-        python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
-        if not errorlevel 1 set "PYTHON_CMD=python"
-    )
-)
-
+set "PYVER="
+call :try_python "py -3.11"
+if not defined PYTHON_CMD call :try_python "py -3"
+if not defined PYTHON_CMD call :try_python "python"
 if not defined PYTHON_CMD goto python_not_found
 
-for /f "tokens=2" %%v in ('%PYTHON_CMD% --version 2^>^&1') do set "PYVER=%%v"
-echo  [OK] Python %PYVER% encontrado.
+echo  [OK] %PYVER% encontrado.
 echo.
 
 if not exist "manage.py" goto project_not_found
@@ -164,12 +146,24 @@ echo  [AVISO] A ligacao foi interrompida. Nova tentativa em 15 segundos...
 timeout /t 15 /nobreak >nul
 goto install_dependencies_attempt
 
+:try_python
+set "CANDIDATE=%~1"
+set "CANDIDATE_VERSION="
+%CANDIDATE% -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
+if errorlevel 1 exit /b 1
+for /f "delims=" %%v in ('%CANDIDATE% --version 2^>^&1') do if not defined CANDIDATE_VERSION set "CANDIDATE_VERSION=%%v"
+if not defined CANDIDATE_VERSION exit /b 1
+set "PYTHON_CMD=%CANDIDATE%"
+set "PYVER=%CANDIDATE_VERSION%"
+exit /b 0
+
 :python_not_found
 echo  [ERRO] Python nao foi encontrado no computador.
 echo.
 echo  Instale Python 3.11 ou superior em:
 echo  https://www.python.org/downloads/
 echo  Durante a instalacao, marque "Add Python to PATH".
+echo  Depois feche esta janela, abra uma nova e execute o instalador novamente.
 goto fail
 
 :python_version_error
