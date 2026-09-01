@@ -2,7 +2,7 @@
 :: Quando aberto por duplo clique, manter uma janela de comandos aberta.
 :: Isto permite ler qualquer erro mesmo que o instalador termine cedo.
 if /i not "%~1"=="__EXECUTAR_INSTALADOR" (
-    start "Instalador - Sistema de Gestao de Energia" cmd.exe /k call "%~f0" __EXECUTAR_INSTALADOR
+    start "Instalador - Sistema de Gestao de Energia" "%ComSpec%" /d /k call "%~f0" __EXECUTAR_INSTALADOR
     exit /b 0
 )
 
