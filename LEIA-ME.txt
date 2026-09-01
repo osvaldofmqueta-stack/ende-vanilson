@@ -3,7 +3,7 @@
   Versao 1.0  |  Desenvolvido em Django + SQLite
 ================================================================
 
-REQUISITO UNICO: Python 3.8 ou superior
+ REQUISITO UNICO: Python 3.11 ou superior
   Download: https://www.python.org/downloads/
   IMPORTANTE: Marque "Add Python to PATH" durante a instalacao!
 
@@ -48,6 +48,7 @@ REQUISITO UNICO: Python 3.8 ou superior
 ================================================================
 
   - Base de dados: SQLite (ficheiro db.sqlite3 na pasta)
+    Nao e necessario instalar PostgreSQL ou outro servidor.
     Nao requer instalacao de servidor de base de dados.
 
   - Para fazer backup dos dados, basta copiar o ficheiro:

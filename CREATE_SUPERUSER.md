@@ -64,7 +64,7 @@ Após criar o superusuário, você pode acessar:
 ✅ Sistema de notificações  
 ✅ Dashboard com estatísticas  
 ✅ Interface administrativa completa  
-✅ Base de dados PostgreSQL configurada  
+✅ Base de dados SQLite configurada
 
 ### Próximas Funcionalidades (Fase 2)
 

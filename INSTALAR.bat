@@ -12,13 +12,25 @@ echo  ===============================================================
 echo.
 
 :: ---- Verificar Python ----
-where python >nul 2>&1
-if errorlevel 1 goto python_not_found
+:: Preferir o launcher oficial do Windows quando existir.
+set "PYTHON_CMD="
+where py >nul 2>&1
+if not errorlevel 1 (
+    py -3.11 -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
+    if not errorlevel 1 set "PYTHON_CMD=py -3.11"
+)
 
-python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
-if errorlevel 1 goto python_version_error
+if not defined PYTHON_CMD (
+    where python >nul 2>&1
+    if not errorlevel 1 (
+        python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else 1)" >nul 2>&1
+        if not errorlevel 1 set "PYTHON_CMD=python"
+    )
+)
 
-for /f "tokens=2" %%v in ('python --version 2^>^&1') do set "PYVER=%%v"
+if not defined PYTHON_CMD goto python_not_found
+
+for /f "tokens=2" %%v in ('%PYTHON_CMD% --version 2^>^&1') do set "PYVER=%%v"
 echo  [OK] Python %PYVER% encontrado.
 echo.
 
@@ -32,11 +44,16 @@ if exist "venv\Scripts\python.exe" (
     echo  [OK] Ambiente virtual ja existe.
 ) else (
     echo  [INFO] A criar ambiente virtual...
-    python -m venv venv
+    %PYTHON_CMD% -m venv venv
     if errorlevel 1 goto venv_error
     echo  [OK] Ambiente virtual criado.
 )
 set "PYTHON=venv\Scripts\python.exe"
+if not exist "%PYTHON%" goto venv_error
+
+:: Confirmar que o ambiente virtual tem pip disponível.
+"%PYTHON%" -m pip --version >nul 2>&1
+if errorlevel 1 goto pip_error
 
 :: ---- Verificar e instalar dependencias ----
 echo.
@@ -85,7 +102,7 @@ echo.
 echo  [5/5] A preparar ficheiros estaticos...
 "%PYTHON%" manage.py collectstatic --noinput --clear
 if errorlevel 1 goto static_error
-echo  [OK] Instalacao completa!
+    echo  [OK] Instalacao completa!
 
 echo.
 echo  ===============================================================
@@ -153,6 +170,12 @@ goto fail
 
 :venv_error
 echo  [ERRO] Nao foi possivel criar o ambiente virtual.
+echo  Confirme que o Python foi instalado com suporte a ambientes virtuais.
+goto fail
+
+:pip_error
+echo  [ERRO] O pip nao esta disponivel no ambiente virtual.
+echo  Repare a instalacao do Python e execute este instalador novamente.
 goto fail
 
 :dependencies_failed

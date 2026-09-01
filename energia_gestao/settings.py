@@ -12,9 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-import warnings
 from decouple import config
-from urllib.parse import unquote, urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -116,63 +114,15 @@ WSGI_APPLICATION = 'energia_gestao.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 #
-# The project uses the provisioned PostgreSQL database. Supporting both the
-# managed DATABASE_URL and the individual PG* variables keeps the settings
-# portable across Replit's development and deployment environments without
-# silently falling back to a different database engine.
-database_url = os.environ.get('DATABASE_URL')
-if database_url:
-    parsed_database_url = urlparse(database_url)
-    if parsed_database_url.scheme in {'postgres', 'postgresql'}:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': unquote(parsed_database_url.path.lstrip('/')),
-                'USER': unquote(parsed_database_url.username or ''),
-                'PASSWORD': unquote(parsed_database_url.password or ''),
-                'HOST': parsed_database_url.hostname or '',
-                'PORT': str(parsed_database_url.port or 5432),
-            }
-        }
-    elif parsed_database_url.scheme == 'sqlite':
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': unquote(parsed_database_url.path.lstrip('/')),
-            }
-        }
-    else:
-        raise RuntimeError(
-            'DATABASE_URL must use the PostgreSQL or SQLite scheme.'
-        )
-else:
-    required_database_vars = ('PGDATABASE', 'PGUSER', 'PGPASSWORD', 'PGHOST')
-    missing_database_vars = [key for key in required_database_vars if not os.environ.get(key)]
-    if not missing_database_vars:
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.environ['PGDATABASE'],
-                'USER': os.environ['PGUSER'],
-                'PASSWORD': os.environ['PGPASSWORD'],
-                'HOST': os.environ['PGHOST'],
-                'PORT': os.environ.get('PGPORT', '5432'),
-            }
-        }
-    else:
-        local_sqlite_path = BASE_DIR / 'db.sqlite3'
-        warnings.warn(
-            'PostgreSQL não está configurado; a instalação local utilizará '
-            f'SQLite em {local_sqlite_path}. No Replit, configure PostgreSQL '
-            'para utilizar a base de dados oficial do projeto.',
-            RuntimeWarning,
-        )
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': local_sqlite_path,
-            }
-        }
+# SQLite is intentional for this standalone installation. Keeping the database
+# beside the project makes it easy to back up or move the application to
+# another Windows computer without requiring a database server.
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 
 # Password validation
